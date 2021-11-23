@@ -5,6 +5,9 @@ import MovieList from "./Movie/MovieList";
 import Footer from "./OtherPages/Footer";
 import NavBar from "./OtherPages/NavBar";
 import SignUp from "./Sign Up/SignUp";
+import AddMovie from "./Movie/AddMovie";
+import UserList from "./admin/UserList";
+import ViewUsers from "./admin/ViewUsers";
 
 const App = () => {
   return (
@@ -19,6 +22,15 @@ const App = () => {
         </Route>
         <Route exact path="/movie-list">
           <MovieList />
+        </Route>
+        <Route exact path="/add-movie">
+          <AddMovie />
+        </Route>
+        <Route exact path="/user-list">
+          <UserList />
+        </Route>
+        <Route exact path="/view">
+          <ViewUsers />
         </Route>
       </Switch>
       <Footer />
