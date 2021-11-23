@@ -4,6 +4,14 @@ import { useHistory } from "react-router";
 //firebase
 import { auth, db } from "../firebase/firebase";
 import { doc, setDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 //mui
@@ -59,12 +67,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const columns = [
-  { id: "fname", label: "First Name", minWidth: 200 },
-  { id: "lname", label: "Last Name", minWidth: 200 },
+  { id: "uname", label: "User Name", minWidth: 250 },
   {
     id: "email",
     label: "Email",
-    minWidth: 250,
+    minWidth: 300,
     align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
@@ -83,68 +90,88 @@ const columns = [
   },
 ];
 
-function createData(fname, lname, email, gender, action) {
-  return { fname, lname, email, gender, action };
+function createData(uname, email, gender, action) {
+  return { uname, email, gender, action };
 }
 
-const rows = [
-  createData(
-    "Ayesh",
-    "Dissanayaka",
-    "ayesh@gmail.com",
-    "Male",
-    <span>
-      <Tooltip title="View" placement="top">
-        <a href="/view">
-          <IconButton
-            aria-label="view"
-            size="small"
-            style={{ color: "#6a1b9a", backgroundColor: "#e1bee7" }}
-          >
-            <MoreHorizIcon fontSize="small" />
-          </IconButton>
-        </a>
-      </Tooltip>{" "}
-      &nbsp;
-      <Tooltip title="Edit" placement="bottom">
-        <a href="/edit">
-          <IconButton
-            aria-label="edit"
-            size="small"
-            style={{ color: "#00695c", backgroundColor: "#b2dfdb" }}
-          >
-            <CreateIcon fontSize="small" />
-          </IconButton>
-        </a>
-      </Tooltip>{" "}
-      &nbsp;
-      <Tooltip title="Delete" placement="right">
-        <a href="/delete">
-          <IconButton
-            aria-label="delete"
-            size="small"
-            style={{ color: "#ff6f00", backgroundColor: "#ffecb3" }}
-          >
-            <DeleteForeverIcon fontSize="small" />
-          </IconButton>
-        </a>
-      </Tooltip>
-    </span>
-  ),
-  createData("Ayoma", "Chathumini", "akatuwawala@gmail.com", "Female"),
-  createData("Mark", "Zuckerburg", "mark.123@yahoomail.com", "Male"),
-];
-
 const UserList = () => {
-  const [details, setDetails] = useState({
-    fname: "",
-    lname: "",
-    gender: "",
-    email: "",
-    type: "",
-  });
-
   const history = useHistory();
+  const [nrows, setNrows] = useState([]);
+  const [type, setType] = useState("viewer");
+  const [active, setActive] = useState(false);
+  const [array, setArray] = useState([]);
+
+  useEffect(async () => {
+    setArray([]);
+    //let utype = type.toString();
+    const utype = type.toString();
+    console.log("user: " + type);
+    getDocs(query(collection(db, "users"), where("type", "==", utype))).then(
+      (query) => {
+        query.forEach((doc) => {
+          console.log(doc.id, " => ", doc.data());
+          const uname = doc.data().fname + " " + doc.data().lname;
+          const email = doc.data().email.toLowerCase();
+          const toTitleCase = (phrase) => {
+            return phrase
+              .toLowerCase()
+              .split(" ")
+              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(" ");
+          };
+
+          let result = toTitleCase(uname);
+
+          array.push(
+            createData(
+              result,
+              email,
+              doc.data().gender,
+              <span>
+                <Tooltip title="View" placement="top">
+                  <a href="/view">
+                    <IconButton
+                      aria-label="view"
+                      size="small"
+                      style={{ color: "#6a1b9a", backgroundColor: "#e1bee7" }}
+                    >
+                      <MoreHorizIcon fontSize="small" />
+                    </IconButton>
+                  </a>
+                </Tooltip>{" "}
+                &nbsp;
+                <Tooltip title="Edit" placement="bottom">
+                  <a href="/edit">
+                    <IconButton
+                      aria-label="edit"
+                      size="small"
+                      style={{ color: "#00695c", backgroundColor: "#b2dfdb" }}
+                    >
+                      <CreateIcon fontSize="small" />
+                    </IconButton>
+                  </a>
+                </Tooltip>{" "}
+                &nbsp;
+                <Tooltip title="Delete" placement="right">
+                  <a href="/delete">
+                    <IconButton
+                      aria-label="delete"
+                      size="small"
+                      style={{ color: "#ff6f00", backgroundColor: "#ffecb3" }}
+                    >
+                      <DeleteForeverIcon fontSize="small" />
+                    </IconButton>
+                  </a>
+                </Tooltip>
+              </span>
+            )
+          );
+        });
+        setNrows(array);
+        //console.log(array);
+      }
+    );
+  }, [type]);
 
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
@@ -182,8 +209,26 @@ const UserList = () => {
             style={{ color: "#bf360c" }}
             aria-label="outlined secondary button group"
           >
-            <Button>Admin</Button>
-            <Button>Users</Button>
+            <Button
+              style={{ backgroundColor: active ? "#536dfe" : "#8c9eff" }}
+              onClick={() => {
+                setActive(true);
+                setType("screen");
+                console.log("screen");
+              }}
+            >
+              Admin
+            </Button>
+            <Button
+              style={{ backgroundColor: active ? "#8c9eff" : "#536dfe" }}
+              onClick={() => {
+                setActive(false);
+                setType("viewer");
+                console.log("viewer");
+              }}
+            >
+              Users
+            </Button>
           </ButtonGroup>
           <br />
           <br />
@@ -208,7 +253,7 @@ const UserList = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows
+                  {nrows
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
                       return (
@@ -237,7 +282,7 @@ const UserList = () => {
             <TablePagination
               rowsPerPageOptions={[5, 10, 15]}
               component="div"
-              count={rows.length}
+              count={nrows.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
