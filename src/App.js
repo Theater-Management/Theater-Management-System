@@ -8,7 +8,13 @@ import NavBar from "./OtherPages/NavBar";
 
 import ScreenView from "./Screen/ScreenView";
 import SignUp from "./Sign Up/SignUp";
+
 import ScreenSignUp from "./admin/screenSignUp";
+
+import AddMovie from "./Movie/AddMovie";
+import UserList from "./admin/UserList";
+import ViewUsers from "./admin/ViewUsers";
+
 
 const App = () => {
   return (
@@ -27,11 +33,22 @@ const App = () => {
         <Route exact path="/movie-list">
           <MovieList />
         </Route>
+
+        <Route exact path="/add-movie">
+          <AddMovie />
+        </Route>
+        <Route exact path="/user-list">
+          <UserList />
+        </Route>
+        <Route exact path="/view">
+          <ViewUsers />
+        </Route>
         <Route exact path="/screen-list">
           <ScreenView />
         </Route>
         <Route exact path="/edit-booking">
           <EditBooking />
+
         </Route>
       </Switch>
       <Footer />
