@@ -198,7 +198,7 @@ const ViewUsers = () => {
                 <blockquote>
                   <ul>
                     <li>User Name</li>
-                    <li>gender</li>
+                    <li>Gender</li>
                     <li>Email</li>
                   </ul>
                 </blockquote>
