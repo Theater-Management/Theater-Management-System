@@ -79,6 +79,7 @@ const SignUp = () => {
         });
 
         console.log("created");
+        history.push("movie-list");
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -87,7 +88,7 @@ const SignUp = () => {
       });
 
     //==============================
-    history.push("movie-list");
+
     //------------------------------------------------------
   };
   return (
@@ -186,9 +187,9 @@ const SignUp = () => {
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Button color="primary" onClick={() => history.push("/")}>
                 Already have an account? Sign in
-              </Link>
+              </Button>
             </Grid>
           </Grid>
         </form>
