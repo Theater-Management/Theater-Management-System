@@ -42,26 +42,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUp = () => {
+const ScreenSignUp = () => {
   const history = useHistory();
   const classes = useStyles();
 
   const [details, setDetails] = useState({
     fname: "",
     lname: "",
-    gender: "",
+    
     email: "",
     password: "",
-    type: "",
+    screentype: "",
+    type:"",
   });
 
   const setValue = (e) =>
     setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
 
   const handleSubmit = () => {
-    console.log(details);
+   
 
-    console.log(details);
+    
     //===============================
     createUserWithEmailAndPassword(auth, details.email, details.password)
       .then((userCredential) => {
@@ -72,22 +73,20 @@ const SignUp = () => {
           uid: user.uid,
           fname: details.fname,
           lname: details.lname,
-          gender: details.gender,
           email: details.email,
           password: details.password,
-          type: "viewer",
+          screentype:details.screentype,
+          screensize:details.screensize,
+          type: "screen"
         });
 
-        console.log("created");
-        history.push("movie-list");
+       
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         // ..
       });
-
-    //==============================
 
     //------------------------------------------------------
   };
@@ -131,22 +130,7 @@ const SignUp = () => {
               />
             </Grid>
 
-            <Grid item xs={12}>
-              <Select
-                variant="outlined"
-                required
-                fullWidth
-                value={details.gender}
-                name="gender"
-                id="gender"
-                onChange={setValue}
-              >
-                <option value="female" selected>
-                  Female
-                </option>
-                <option value="male">Male</option>
-              </Select>
-            </Grid>
+          
 
             <Grid item xs={12}>
               <TextField
@@ -175,6 +159,34 @@ const SignUp = () => {
                 onChange={setValue}
               />
             </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="screentype"
+                label="screentype"
+                type="screentype"
+                id="screentype"
+                value={details.screentype}
+                autoComplete="screentype"
+                onChange={setValue}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="screensize"
+                label="screensize"
+                type="screensize"
+                id="screensize"
+                value={details.screensize}
+                autoComplete="screensize"
+                onChange={setValue}
+              />
+            </Grid>
           </Grid>
           <Button
             fullWidth
@@ -185,16 +197,10 @@ const SignUp = () => {
           >
             Sign Up
           </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Button color="primary" onClick={() => history.push("/")}>
-                Already have an account? Sign in
-              </Button>
-            </Grid>
-          </Grid>
+         
         </form>
       </div>
     </Container>
   );
 };
-export default SignUp;
+export default ScreenSignUp;

@@ -59,6 +59,18 @@ const NavBar = () => {
             <Button style={{ color: "white" }}>Movie List</Button>
             <Button
               style={{ color: "white" }}
+              onClick={() => history.push("/add-movie")}
+            >
+              Add Movie
+            </Button>
+            <Button
+              style={{ color: "white" }}
+              onClick={() => history.push("/user-list")}
+            >
+              Users
+            </Button>
+            <Button
+              style={{ color: "white" }}
               onClick={() => history.push("/signup")}
             >
               Sign Up
