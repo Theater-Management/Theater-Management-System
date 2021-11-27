@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Home from "./Home/HomePage";
 import MovieList from "./Movie/MovieList";
 import EditBooking from "./MovieBooking/EditBooking";
+import BookingList from "./MovieBooking/BookingList";
 import Footer from "./OtherPages/Footer";
 import NavBar from "./OtherPages/NavBar";
 
@@ -16,7 +17,6 @@ import AddMovie from "./Movie/AddMovie";
 import UserList from "./admin/UserList";
 import EditUsers from "./admin/EditUsers";
 import ViewUsers from "./admin/ViewUsers";
-
 
 const App = () => {
   return (
@@ -57,8 +57,13 @@ const App = () => {
         <Route exact path="/edit-booking">
           <EditBooking />
         </Route>
+
         <Route exact path="/edit-users">
           <EditUsers />
+
+        <Route exact path="/view-bookings">
+          <BookingList />
+
         </Route>
       </Switch>
       <Footer />

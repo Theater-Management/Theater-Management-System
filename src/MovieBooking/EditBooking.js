@@ -3,32 +3,24 @@ import { useHistory } from "react-router";
 
 //firebase
 import { auth, db } from "../firebase/firebase";
-import { doc, setDoc } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { doc } from "firebase/firestore";
 import {
-  getFirestore,
   collection,
   query,
   where,
   getDoc,
+  getDocs,
   updateDoc,
 } from "firebase/firestore";
 
 //mui
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Select from "@material-ui/core/Select";
-import { FormControl, InputLabel } from "@material-ui/core";
 import { Details } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
@@ -59,6 +51,7 @@ const EditBooking = () => {
   const classes = useStyles();
 
   const [details, setDetails] = useState({
+    bid: "",
     email: "",
     uid: "",
     tid: "",
@@ -69,6 +62,7 @@ const EditBooking = () => {
 
   const setValue = (e) =>
     setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
+
   const [currency, setCurrency] = useState("");
 
   useEffect(async () => {
@@ -78,12 +72,9 @@ const EditBooking = () => {
       const data = docSnap.data();
       const userData = { ...data };
       setDetails({ ...userData });
-      movies.push({
-        value: docSnap.data().email,
-        label: docSnap.data().mid,
-      });
-      console.log(movies);
-      setCurrency(docSnap.data().email);
+      getMovieList(userData.mid);
+      getMovieName(userData.mid);
+      console.log("hello ", movies);
     } else {
       // doc.data() will be undefined in this case
 
@@ -91,10 +82,49 @@ const EditBooking = () => {
     }
   }, []);
 
-  const seedetails = () => {
-    console.log(details);
+  const getMovieName = async (mid) => {
+    const docSnap = await getDoc(doc(db, "Movie", mid));
+    if (docSnap.exists()) {
+      const movie = docSnap.data();
+      const movieData = { ...movie };
+      console.log(movieData);
+      movies.push({
+        value: docSnap.data().mid,
+        label: docSnap.data().mname,
+      });
+      setCurrency(docSnap.data().mid);
+    } else {
+      console.log("No such document!");
+    }
   };
 
+  const getMovieList = (mid) => {
+    getDocs(query(collection(db, "Movie"), where("mid", "!=", mid))).then(
+      (query) => {
+        query.forEach((doc) => {
+          console.log(doc.id, " => ", doc.data());
+          movies.push({
+            value: doc.data().mid,
+            label: doc.data().mname,
+          });
+          console.log("movie list", movies);
+        });
+      }
+    );
+  };
+
+  const editBooking = () => {
+    console.log(details);
+    updateDoc(doc(db, "movieBooking", details.bid), {
+      ...details,
+    });
+  };
+
+  const handleChange = (event) => {
+    setCurrency(event.target.value);
+    console.log("id for movie ", event.target.value);
+    setDetails((details) => ({ ...details, mid: event.target.value }));
+  };
   return (
     <Container style={{ height: "100vh" }} maxWidth="xs">
       <CssBaseline />
@@ -126,6 +156,7 @@ const EditBooking = () => {
                 SelectProps={{
                   native: true,
                 }}
+                onChange={handleChange}
               >
                 {movies.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -185,7 +216,7 @@ const EditBooking = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={seedetails}
+            onClick={editBooking}
           >
             Edit Booking
           </Button>

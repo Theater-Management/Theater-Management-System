@@ -11,11 +11,13 @@ import {
   where,
   getDocs,
   updateDoc,
+  deleteDoc
 } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 //mui
 import Avatar from "@material-ui/core/Avatar";
+import { Fab } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import IconButton from "@material-ui/core/IconButton";
@@ -61,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  button:{ width:'90px'},
   table: {
     minWidth: 1500,
   },
@@ -78,7 +81,7 @@ const columns = [
   {
     id: "gender",
     label: "Gender",
-    minWidth: 50,
+    minWidth: 100,
     align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
@@ -101,6 +104,13 @@ const UserList = () => {
   const [active, setActive] = useState(false);
   const [array, setArray] = useState([]);
 
+  const deleteUser = async(uid) => {
+    console.log("uers--> "+uid);
+    const userId = doc(db, 'users', uid);
+    await deleteDoc(userId);
+    window.location.reload(false);
+  }
+
   useEffect(async () => {
     setArray([]);
     //let utype = type.toString();
@@ -111,8 +121,13 @@ const UserList = () => {
         query.forEach((doc) => {
           console.log(doc.id, " => ", doc.data());
           const uname = doc.data().fname + " " + doc.data().lname;
+
          // const email = doc.data().email.toLowerCase();
           const email = doc.data().email;
+
+          //const email = doc.data().email.toLowerCase();
+          const email = doc.data().email
+
           const toTitleCase = (phrase) => {
             return phrase
               .toLowerCase()
@@ -130,39 +145,29 @@ const UserList = () => {
               doc.data().gender,
               <span>
                 <Tooltip title="View" placement="top">
-                  <a href="/view">
-                    <IconButton
-                      aria-label="view"
-                      size="small"
-                      style={{ color: "#6a1b9a", backgroundColor: "#e1bee7" }}
-                    >
-                      <MoreHorizIcon fontSize="small" />
-                    </IconButton>
-                  </a>
+                <Button
+                    size="small"
+                    onClick={() => history.push("/view")}
+                    style={{ color: "#6a1b9a", backgroundColor: "#e1bee7" }}
+                    className={classes.button}
+                    startIcon={<MoreHorizIcon />}
+                  >
+                    View
+                  </Button>
+                 
                 </Tooltip>{" "}
                 &nbsp;
-                <Tooltip title="Edit" placement="bottom">
-                  <a href="/edit">
-                    <IconButton
-                      aria-label="edit"
-                      size="small"
-                      style={{ color: "#00695c", backgroundColor: "#b2dfdb" }}
-                    >
-                      <CreateIcon fontSize="small" />
-                    </IconButton>
-                  </a>
-                </Tooltip>{" "}
-                &nbsp;
+            
                 <Tooltip title="Delete" placement="right">
-                  <a href="/delete">
-                    <IconButton
-                      aria-label="delete"
-                      size="small"
-                      style={{ color: "#ff6f00", backgroundColor: "#ffecb3" }}
-                    >
-                      <DeleteForeverIcon fontSize="small" />
-                    </IconButton>
-                  </a>
+                  <Button
+                    size="small"
+                    onClick={()=> {deleteUser(doc.id)} }
+                    style={{ color: "#00695c", backgroundColor: "#b2dfdb" }}
+                    className={classes.button}
+                    startIcon={<DeleteForeverIcon />}
+                  >
+                    Remove
+                  </Button>
                 </Tooltip>
               </span>
             )
@@ -211,7 +216,8 @@ const UserList = () => {
             aria-label="outlined secondary button group"
           >
             <Button
-              style={{ backgroundColor: active ? "#536dfe" : "#8c9eff" }}
+              variant="contained"
+              color={active ? "primary" : "light"}
               onClick={() => {
                 setActive(true);
                 setType("screen");
@@ -221,7 +227,8 @@ const UserList = () => {
               Admin
             </Button>
             <Button
-              style={{ backgroundColor: active ? "#8c9eff" : "#536dfe" }}
+              variant="contained"
+              color={active ? "dark" : "primary"}
               onClick={() => {
                 setActive(false);
                 setType("viewer");
