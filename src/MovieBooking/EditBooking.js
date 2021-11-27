@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 
 //firebase
 import { auth, db } from "../firebase/firebase";
@@ -22,6 +22,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Details } from "@material-ui/icons";
+import { NativeSelect, Select } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -44,10 +45,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //==========NEW========================
-const movies = [];
+const seat = [];
 
 const EditBooking = () => {
   const history = useHistory();
+  const location = useLocation();
+
+  const [seats, setSeats] = useState("");
   const classes = useStyles();
 
   const [details, setDetails] = useState({
@@ -63,21 +67,43 @@ const EditBooking = () => {
   const setValue = (e) =>
     setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
 
-  const [currency, setCurrency] = useState("");
+  const [screen, setScreen] = useState("");
+
+  const [movieName, setmovieName] = useState("");
+
+  const [prevseatid, setPrevSeatId] = useState("");
 
   useEffect(async () => {
-    const docRef = doc(db, "movieBooking", "rW2WilaNsiQUvq6Okhcb");
+    setSeats([]);
+    const docRef = doc(db, "movieBooking", location.state.row.bid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
       const userData = { ...data };
+      console.log(userData);
       setDetails({ ...userData });
-      getMovieList(userData.mid);
       getMovieName(userData.mid);
-      console.log("hello ", movies);
-    } else {
-      // doc.data() will be undefined in this case
 
+      setPrevSeatId(userData.seatid);
+      //=====================================
+
+      getDocs(
+        query(collection(db, "seat"), where("sid", "==", userData.sid))
+      ).then((query) => {
+        query.forEach((doc) => {
+          if (doc.data().status == "available") {
+            seat.push({
+              label: doc.data().seatid,
+              value: doc.data().seatid,
+            });
+          }
+        });
+        setSeats(details.seatid);
+      });
+
+      //======================================
+      console.log("seats in useeffect ", seats);
+    } else {
       console.log("No such document!");
     }
   }, []);
@@ -88,29 +114,10 @@ const EditBooking = () => {
       const movie = docSnap.data();
       const movieData = { ...movie };
       console.log(movieData);
-      movies.push({
-        value: docSnap.data().mid,
-        label: docSnap.data().mname,
-      });
-      setCurrency(docSnap.data().mid);
+      setmovieName(docSnap.data().mname);
     } else {
       console.log("No such document!");
     }
-  };
-
-  const getMovieList = (mid) => {
-    getDocs(query(collection(db, "Movie"), where("mid", "!=", mid))).then(
-      (query) => {
-        query.forEach((doc) => {
-          console.log(doc.id, " => ", doc.data());
-          movies.push({
-            value: doc.data().mid,
-            label: doc.data().mname,
-          });
-          console.log("movie list", movies);
-        });
-      }
-    );
   };
 
   const editBooking = () => {
@@ -118,13 +125,14 @@ const EditBooking = () => {
     updateDoc(doc(db, "movieBooking", details.bid), {
       ...details,
     });
+    updateDoc(doc(db, "seat", details.seatid), {
+      status: "booked",
+    });
+    updateDoc(doc(db, "seat", prevseatid), {
+      status: "available",
+    });
   };
 
-  const handleChange = (event) => {
-    setCurrency(event.target.value);
-    console.log("id for movie ", event.target.value);
-    setDetails((details) => ({ ...details, mid: event.target.value }));
-  };
   return (
     <Container style={{ height: "100vh" }} maxWidth="xs">
       <CssBaseline />
@@ -149,68 +157,57 @@ const EditBooking = () => {
             <Grid item xs={12}>
               <TextField
                 id="standard-select-movie-native"
-                select
                 fullWidth
                 label="Movie Id"
-                value={currency}
+                value={movieName}
                 SelectProps={{
                   native: true,
                 }}
-                onChange={handleChange}
-              >
-                {movies.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 id="standard-select-theater-native"
-                select
                 fullWidth
                 label="Theater Id"
                 value={details.tid}
-              >
-                {movies.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
+                InputProps={{
+                  readOnly: true,
+                }}
+                readOnly
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 id="standard-select-screen-native"
-                select
                 fullWidth
                 label="screen Id"
                 value={details.sid}
-              >
-                {movies.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
+                InputProps={{
+                  readOnly: true,
+                }}
+              ></TextField>
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                id="standard-select-seat-native"
-                select
+              <NativeSelect
+                value={details.seatid}
+                onChange={(e) => {
+                  setValue(e);
+                  console.log(details);
+                }}
+                name="seatid"
                 fullWidth
-                label="seat Id"
-                value={Details.seatid}
+                className={classes.selectEmpty}
+                inputProps={{ "aria-label": "age" }}
               >
-                {movies.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
+                <option value={details.seatid}>{details.seatid}</option>
+                {seat.map((option) => (
+                  <option value={option.value}>{option.label}</option>
                 ))}
-              </TextField>
+              </NativeSelect>
             </Grid>
           </Grid>
+
           <Button
             fullWidth
             variant="contained"

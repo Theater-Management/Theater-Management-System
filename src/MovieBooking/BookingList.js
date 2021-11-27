@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { AuthContext } from "../firebase/AuthContext";
 //firebase
 import { auth, db } from "../firebase/firebase";
 import { doc, setDoc } from "firebase/firestore";
@@ -11,6 +12,7 @@ import {
   getDocs,
   updateDoc,
   deleteDoc,
+  getDoc,
 } from "firebase/firestore";
 
 //material Ui
@@ -28,8 +30,8 @@ import { Button, Grid, Modal } from "@material-ui/core";
 
 import { Search } from "@material-ui/icons";
 
-function createData(bid, email) {
-  return { bid, email };
+function createData(bid, email, movie) {
+  return { bid, email, movie };
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -48,10 +50,31 @@ const useStyles = makeStyles((theme) => ({
 
 const ScreenView = () => {
   const history = useHistory();
+  const user = useContext(AuthContext);
+  console.log(user.user.userDetails);
   const [rows, setRows] = useState([]);
-
+  const [moviename, setMovieName] = useState("");
   const [array, setArray] = useState([]);
   useEffect(() => {
+    setArray([]);
+    getDocs(
+      query(
+        collection(db, "movieBooking"),
+        where("uid", "==", user.user.userDetails.uid)
+      )
+    ).then((query) => {
+      query.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        console.log("mid id ", doc.data().mid);
+        getMovieName(doc.data().mid);
+        array.push(createData(doc.data().bid, doc.data().email, moviename));
+      });
+      setRows(array);
+      console.log(array);
+    });
+  }, [moviename]);
+
+  const loadBookings = () => {
     setArray([]);
     getDocs(
       query(
@@ -60,18 +83,49 @@ const ScreenView = () => {
       )
     ).then((query) => {
       query.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-        array.push(createData(doc.data().bid, doc.data().email));
+        //console.log(doc.id, " => ", doc.data());
+        getMovieName(doc.data().mid);
+        array.push(createData(doc.data().bid, doc.data().email, moviename));
       });
       setRows(array);
       console.log(array);
     });
-  }, []);
+  };
+  //==========================================================
+  const getMovieName = (mid) => {
+    getDocs(query(collection(db, "Movie"), where("mid", "==", mid))).then(
+      (query) => {
+        query.forEach((doc) => {
+          console.log(doc.id, " => ", doc.data());
+          setMovieName(doc.data().mname);
+          console.log("movie is ", moviename);
+        });
+      }
+    );
+  };
 
-  const [select, setSelect] = useState();
-  //==========================================
+  //========================================================
 
   const classes = useStyles();
+
+  const deletebooking = async (bid) => {
+    const docSnap = await getDoc(doc(db, "movieBooking", bid));
+    if (docSnap.exists()) {
+      const booking = docSnap.data();
+      const bookingData = { ...booking };
+      console.log("booking seat id", bookingData.seatid);
+      //========================
+      updateDoc(doc(db, "seat", bookingData.seatid), {
+        status: "available",
+      });
+
+      deleteDoc(doc(db, "movieBooking", bid));
+      loadBookings();
+      //=========================
+    } else {
+      console.log("No such document!");
+    }
+  };
 
   return (
     <Container style={{ height: "100vh", marginTop: 10 }} maxWidth="md">
@@ -79,9 +133,10 @@ const ScreenView = () => {
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="center">ScreenID</TableCell>
+              <TableCell align="center">BookingID</TableCell>
               <TableCell align="center">Email</TableCell>
-              {/* <TableCell align="center">Edit</TableCell> */}
+              <TableCell align="center">Movie</TableCell>
+              <TableCell align="center">Edit</TableCell>
               <TableCell align="center">Delete</TableCell>
             </TableRow>
           </TableHead>
@@ -90,12 +145,28 @@ const ScreenView = () => {
               <TableRow hover key={row.name}>
                 <TableCell align="center">{row.bid}</TableCell>
                 <TableCell align="center">{row.email}</TableCell>
+                <TableCell align="center">{row.movie}</TableCell>
                 <TableCell align="center">
                   <Button
                     variant="outlined"
                     color="secondary"
-                    onClick={async () => {
-                      await deleteDoc(doc(db, "movieBooking", row.bid));
+                    onClick={() =>
+                      history.push({
+                        pathname: "/edit-booking",
+                        state: { row },
+                      })
+                    }
+                  >
+                    Edit
+                  </Button>
+                </TableCell>
+                <TableCell align="center">
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => {
+                      deletebooking(row.bid);
+                      console.log(row.bid);
                     }}
                   >
                     Delete

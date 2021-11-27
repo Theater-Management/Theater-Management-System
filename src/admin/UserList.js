@@ -11,7 +11,7 @@ import {
   where,
   getDocs,
   updateDoc,
-  deleteDoc
+  deleteDoc,
 } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  button:{ width:'90px'},
+  button: { width: "90px" },
   table: {
     minWidth: 1500,
   },
@@ -104,12 +104,12 @@ const UserList = () => {
   const [active, setActive] = useState(false);
   const [array, setArray] = useState([]);
 
-  const deleteUser = async(uid) => {
-    console.log("uers--> "+uid);
-    const userId = doc(db, 'users', uid);
+  const deleteUser = async (uid) => {
+    console.log("uers--> " + uid);
+    const userId = doc(db, "users", uid);
     await deleteDoc(userId);
     window.location.reload(false);
-  }
+  };
 
   useEffect(async () => {
     setArray([]);
@@ -121,8 +121,10 @@ const UserList = () => {
         query.forEach((doc) => {
           console.log(doc.id, " => ", doc.data());
           const uname = doc.data().fname + " " + doc.data().lname;
-          //const email = doc.data().email.toLowerCase();
-          const email = doc.data().email
+
+          // const email = doc.data().email.toLowerCase();
+          const email = doc.data().email;
+
           const toTitleCase = (phrase) => {
             return phrase
               .toLowerCase()
@@ -140,7 +142,7 @@ const UserList = () => {
               doc.data().gender,
               <span>
                 <Tooltip title="View" placement="top">
-                <Button
+                  <Button
                     size="small"
                     onClick={() => history.push("/view")}
                     style={{ color: "#6a1b9a", backgroundColor: "#e1bee7" }}
@@ -149,14 +151,14 @@ const UserList = () => {
                   >
                     View
                   </Button>
-                 
                 </Tooltip>{" "}
                 &nbsp;
-            
                 <Tooltip title="Delete" placement="right">
                   <Button
                     size="small"
-                    onClick={()=> {deleteUser(doc.id)} }
+                    onClick={() => {
+                      deleteUser(doc.id);
+                    }}
                     style={{ color: "#00695c", backgroundColor: "#b2dfdb" }}
                     className={classes.button}
                     startIcon={<DeleteForeverIcon />}
