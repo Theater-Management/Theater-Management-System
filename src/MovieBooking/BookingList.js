@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { AuthContext } from "../firebase/AuthContext";
 //firebase
 import { auth, db } from "../firebase/firebase";
 import { doc, setDoc } from "firebase/firestore";
@@ -49,6 +50,8 @@ const useStyles = makeStyles((theme) => ({
 
 const ScreenView = () => {
   const history = useHistory();
+  const user = useContext(AuthContext);
+  console.log(user.user.userDetails);
   const [rows, setRows] = useState([]);
   const [moviename, setMovieName] = useState("");
   const [array, setArray] = useState([]);
@@ -57,7 +60,7 @@ const ScreenView = () => {
     getDocs(
       query(
         collection(db, "movieBooking"),
-        where("uid", "==", "5pC4kWUIw9hqxBeER9j4XShSJ1u2")
+        where("uid", "==", user.user.userDetails.uid)
       )
     ).then((query) => {
       query.forEach((doc) => {

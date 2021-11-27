@@ -30,9 +30,9 @@ const App = () => {
           <SignUp />
         </Route>
 
-          <Route exact path="/theatresignup">
-            <TheatreSignUp />
-          </Route>
+        <Route exact path="/theatresignup">
+          <TheatreSignUp />
+        </Route>
 
         <Route exact path="/screensignup">
           <ScreenSignUp />
@@ -60,10 +60,10 @@ const App = () => {
 
         <Route exact path="/edit-users">
           <EditUsers />
+        </Route>
 
         <Route exact path="/view-bookings">
           <BookingList />
-
         </Route>
       </Switch>
       <Footer />
