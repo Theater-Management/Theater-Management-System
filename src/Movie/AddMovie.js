@@ -47,7 +47,7 @@ const AddMovie = () => {
   const classes = useStyles();
 
   const [details, setDetails] = useState({
-    mid:"",
+    mid: "",
     mname: "",
     url: "",
     time: "",
@@ -75,7 +75,7 @@ const AddMovie = () => {
   const handleSubmit = () => {
     console.log(details);
 
-    setDoc(doc(db, "Movie", "13"), {
+    setDoc(doc(db, "Movie", doc().id), {
       mid: details.mid,
       mname: details.mname,
       director: details.director,
