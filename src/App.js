@@ -9,11 +9,13 @@ import NavBar from "./OtherPages/NavBar";
 
 import ScreenView from "./Screen/ScreenView";
 import SignUp from "./Sign Up/SignUp";
+import TheatreSignUp from "./admin/TheatreSignUp";
 
 import ScreenSignUp from "./admin/ScreenSignUp";
 
 import AddMovie from "./Movie/AddMovie";
 import UserList from "./admin/UserList";
+import EditUsers from "./admin/EditUsers";
 import ViewUsers from "./admin/ViewUsers";
 
 const App = () => {
@@ -27,9 +29,15 @@ const App = () => {
         <Route exact path="/signup">
           <SignUp />
         </Route>
+
+          <Route exact path="/theatresignup">
+            <TheatreSignUp />
+          </Route>
+
         <Route exact path="/screensignup">
           <ScreenSignUp />
         </Route>
+
         <Route exact path="/movie-list">
           <MovieList />
         </Route>
@@ -49,8 +57,13 @@ const App = () => {
         <Route exact path="/edit-booking">
           <EditBooking />
         </Route>
+
+        <Route exact path="/edit-users">
+          <EditUsers />
+
         <Route exact path="/view-bookings">
           <BookingList />
+
         </Route>
       </Switch>
       <Footer />
