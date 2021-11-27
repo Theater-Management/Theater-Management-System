@@ -70,6 +70,7 @@ const TheatreSignUp = () => {
                     email: details.email,
                     password: details.password,
                     type: "theatre",
+
                 });
 
                 console.log("created");

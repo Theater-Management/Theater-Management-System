@@ -10,10 +10,11 @@ import ScreenView from "./Screen/ScreenView";
 import SignUp from "./Sign Up/SignUp";
 import TheatreSignUp from "./admin/TheatreSignUp";
 
-import ScreenSignUp from "./admin/screenSignUp";
+import ScreenSignUp from "./admin/ScreenSignUp";
 
 import AddMovie from "./Movie/AddMovie";
 import UserList from "./admin/UserList";
+import EditUsers from "./admin/EditUsers";
 import ViewUsers from "./admin/ViewUsers";
 
 
@@ -55,7 +56,9 @@ const App = () => {
         </Route>
         <Route exact path="/edit-booking">
           <EditBooking />
-
+        </Route>
+        <Route exact path="/edit-users">
+          <EditUsers />
         </Route>
       </Switch>
       <Footer />

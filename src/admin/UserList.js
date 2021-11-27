@@ -111,7 +111,8 @@ const UserList = () => {
         query.forEach((doc) => {
           console.log(doc.id, " => ", doc.data());
           const uname = doc.data().fname + " " + doc.data().lname;
-          const email = doc.data().email.toLowerCase();
+         // const email = doc.data().email.toLowerCase();
+          const email = doc.data().email;
           const toTitleCase = (phrase) => {
             return phrase
               .toLowerCase()
