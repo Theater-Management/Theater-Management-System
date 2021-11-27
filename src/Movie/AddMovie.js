@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../firebase/firebase";
 
 //  material ui
 import Avatar from "@material-ui/core/Avatar";
@@ -22,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   formControl: {
-    minWidth: 268,
+    minWidth: 180,
   },
   success: {
     color: "#fff101",
@@ -45,20 +47,21 @@ const AddMovie = () => {
   const classes = useStyles();
 
   const [details, setDetails] = useState({
-    mnane: "",
+    mid:"",
+    mname: "",
     url: "",
     time: "",
     director: "",
     cast: "",
     description: "",
     theatre: "",
-    screen: "",
+    screen: [],
   });
 
   const setValue = (e) =>
     setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
   const handleReset = () => {
-    setDetails((details) => ({
+    setDetails(() => ({
       mname: "",
       url: "",
       time: "",
@@ -66,12 +69,26 @@ const AddMovie = () => {
       cast: "",
       description: "",
       theatre: "",
-      screen: "",
+      screen: [],
     }));
   };
   const handleSubmit = () => {
     console.log(details);
+
+    setDoc(doc(db, "Movie", "13"), {
+      mid: details.mid,
+      mname: details.mname,
+      director: details.director,
+      cast: details.cast,
+      description: details.description,
+      theatre: details.theatre,
+      screen: details.screen,
+    });
     history.push("movie-list");
+  };
+
+  const pushtoScreen = (event) => {
+    details.screen.push(event.target.value);
   };
 
   return (
@@ -86,7 +103,6 @@ const AddMovie = () => {
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="mname"
@@ -104,7 +120,7 @@ const AddMovie = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-              variant="outlined"
+                variant="outlined"
                 id="date-time"
                 label="date-time"
                 name="time"
@@ -136,7 +152,7 @@ const AddMovie = () => {
                 onChange={setValue}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel htmlFor="outlined-age-native-simple">
                   Theatre
@@ -146,19 +162,19 @@ const AddMovie = () => {
                   required
                   label="Theatre"
                   fullWidth
-                  value={details.tname}
-                  name="tname"
-                  id="tname"
+                  value={details.theatre}
+                  name="theatre"
+                  id="theatre"
                   onChange={setValue}
                 >
                   <option aria-label="None" value="" />
-                  <option value={details.tid}>Ereana</option>
-                  <option value={20}>Sigiri</option>
-                  <option value={30}>MaxWell</option>
+                  <option value={100}>Ereana</option>
+                  <option value={200}>Sigiri</option>
+                  <option value={300}>MaxWell</option>
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel htmlFor="outlined-age-native-simple">
                   Screen
@@ -167,14 +183,34 @@ const AddMovie = () => {
                   variant="outlined"
                   required
                   label="Screen"
-                  fullWidth
-                  value={details.sname}
-                  name="sname"
-                  id="sname"
-                  onChange={setValue}
+                  value={details.screen[0]}
+                  name="screen"
+                  id="screen"
+                  onChange={pushtoScreen}
                 >
                   <option aria-label="None" value="" />
-                  <option value={details.sname}>Screen 1</option>
+                  <option value={10}>Screen 1</option>
+                  <option value={20}>Screen 2</option>
+                  <option value={30}>Screen 3</option>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel htmlFor="outlined-age-native-simple">
+                  Screen
+                </InputLabel>
+                <Select
+                  variant="outlined"
+                  required
+                  label="Screen"
+                  value={details.screen[1]}
+                  name="screen"
+                  id="screen"
+                  onChange={pushtoScreen}
+                >
+                  <option aria-label="None" value="" />
+                  <option value={10}>Screen 1</option>
                   <option value={20}>Screen 2</option>
                   <option value={30}>Screen 3</option>
                 </Select>
