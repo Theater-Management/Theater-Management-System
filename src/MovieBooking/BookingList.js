@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ScreenView = () => {
+const BookingList = () => {
   const history = useHistory();
   const user = useContext(AuthContext);
   console.log(user.user.userDetails);
@@ -86,7 +86,7 @@ const ScreenView = () => {
     getDocs(
       query(
         collection(db, "movieBooking"),
-        where("uid", "==", "5pC4kWUIw9hqxBeER9j4XShSJ1u2")
+        where("uid", "==", user.user.userDetails.uid)
       )
     ).then((query) => {
       query.forEach((doc) => {
@@ -196,4 +196,4 @@ const ScreenView = () => {
     </Container>
   );
 };
-export default ScreenView;
+export default BookingList;
