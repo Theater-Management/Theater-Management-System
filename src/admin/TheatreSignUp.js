@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 //firebase
-import { auth, db } from "../firebase/firebase";
-import { makeStyles } from "@material-ui/core/styles";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import {auth, db} from "../firebase/firebase";
+import {makeStyles} from "@material-ui/core/styles";
+import {createUserWithEmailAndPassword} from "firebase/auth";
+import {doc, setDoc} from "firebase/firestore";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Avatar from "@material-ui/core/Avatar";
@@ -17,25 +17,26 @@ import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 // import TheaterComedyIcon from '@mui/icons-material/TheaterComedy';
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+    paper: {
+        marginTop: theme.spacing(8),
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+    },
+    avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+        width: "100%", // Fix IE 11 issue.
+        marginTop: theme.spacing(3),
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
 }));
 const TheatreSignUp = () => {
+
   const history = useHistory();
   const classes = useStyles();
 
@@ -61,9 +62,9 @@ const TheatreSignUp = () => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-
+// =========================================
         setDoc(doc(db, "users", user.uid), {
-          theatrename: details.theatrename,
+          tname: details.theatrename,
           location: details.location,
           capacity: details.capacity,
           email: details.email,
@@ -85,6 +86,7 @@ const TheatreSignUp = () => {
   //==============================
 
   //------------------------------------------------------
+
 
   return (
     <Container style={{ height: "100vh" }} maxWidth="xs">
@@ -183,6 +185,10 @@ const TheatreSignUp = () => {
     </Container>
   );
 };
-export default TheatreSignUp;
+
 
  
+=======
+export default TheatreSignUp;
+
+

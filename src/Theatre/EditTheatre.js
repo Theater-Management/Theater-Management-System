@@ -46,7 +46,7 @@ const EditTheatre = () => {
   const classes = useStyles();
   const user = useContext(AuthContext);
   const [details, setDetails] = useState({
-    theatrename: "",
+    tname: "",
     location: "",
     capacity: "",
     email: "",
@@ -63,13 +63,13 @@ const EditTheatre = () => {
       console.log(data);
       const userData = { ...data };
       setDetails({
-        theatrename: data.theatrename,
+        tname: data.tname,
         location: data.location,
         capacity: data.capacity,
         email: data.email,
       });
 
-      console.log("usern: " + details.theatrename);
+      console.log("usern: " + details.tname);
       console.log("uid-:"+user.user.userDetails.uid);
     } else {
       console.log("No such document!");
@@ -85,7 +85,7 @@ const EditTheatre = () => {
     // Signed in
     const userId = user.user.userDetails.uid;
     updateDoc(doc(db, "users", userId), {
-        theatrename: details.theatrename,
+        tname: details.tname,
       location: details.location,
       capacity: details.capacity,
       email: details.email,
@@ -111,7 +111,7 @@ const EditTheatre = () => {
     setTimeout(() => {
         console.log('Hello, World!')
       }, 1000);
-      history.push("movie-list");
+      history.push("theatrehome");
   };
 
   return (
@@ -130,13 +130,13 @@ const EditTheatre = () => {
             <Grid item xs={12}>
               <TextField
                 autoComplete="theatrename"
-                name="theatrename"
+                name="tname"
                 variant="outlined"
                 required
                 fullWidth
-                id="theatrename"
+                id="tname"
                 label="Threatre Name"
-                value={details.theatrename}
+                value={details.tname}
                 autoFocus
                 onChange={setValue}
               />

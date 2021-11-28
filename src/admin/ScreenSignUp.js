@@ -65,11 +65,10 @@ const ScreenSignUp = () => {
     email: "",
     password: "",
     screentype: "",
-    noOfSeats: "",
-    theatre: "",
-    type: "",
-    sid: "",
-    tid: "",
+    noOfSeats:"",
+    tid:"",
+    type:"",
+
   });
 
   useEffect(async () => {
@@ -103,11 +102,12 @@ const ScreenSignUp = () => {
           sid: user.uid,
           email: details.email,
           password: details.password,
-          screentype: details.screentype,
-          // theatre:details.theatre,
-          noOfSeats: details.noOfSeats,
-          type: "screen",
-          tid: details.theatre,
+
+          screentype:details.screentype,
+          tid:details.tid,
+          noOfSeats:details.noOfSeats,
+          type: "screen"
+
         });
       })
       .catch((error) => {
@@ -175,9 +175,11 @@ const ScreenSignUp = () => {
               <Select
                 variant="outlined"
                 required
+                select
+                label="theater"
                 fullWidth
-                value={details.theatre}
-                name="theater"
+                value={details.tid}
+                name="tid"
                 id="tid"
                 onChange={setValue}
               >

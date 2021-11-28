@@ -1,7 +1,7 @@
-import React, { createContext, useEffect, useState } from "react";
-import { db, auth } from "./firebase";
 import { doc, getDoc } from "firebase/firestore";
-import { useHistory } from "react-router";
+import React, { createContext, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { auth, db } from "./firebase";
 
 export const AuthContext = createContext();
 
@@ -11,7 +11,9 @@ export const AuthProvider = (props) => {
   useEffect(() => {
     auth.onAuthStateChanged(async (fbUser) => {
       if (fbUser == null) {
-        return history.push("/");
+        console.log(fbUser);
+        // history.push("/");
+        return;
       }
       const docRef = doc(db, "users", fbUser.uid);
       const docSnap = await getDoc(docRef);

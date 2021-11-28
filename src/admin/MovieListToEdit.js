@@ -83,6 +83,7 @@ const MovieListToEdit = () => {
 //       }
 //     );
 //   };
+
   const loadBookings = () => {
     setArray([]);
     getDocs(
@@ -105,7 +106,20 @@ const MovieListToEdit = () => {
 
   const classes = useStyles();
 
-
+  const deleteMovie = async (mid) => {
+    const docSnap = await getDoc(doc(db, "Movie", mid));
+    if (docSnap.exists()) {
+      const bs = docSnap.data();
+      const bsd = { ...bs };
+      console.log("seat id", bsd.seatid);
+      
+      deleteDoc(doc(db, "Movie", mid));
+      // loadSeats();
+      //=========================
+    } else {
+      console.log("No such document!");
+    }
+  };
 
   return (
     <Container style={{ height: "100vh", marginTop: 10 }} maxWidth="md">
@@ -119,6 +133,7 @@ const MovieListToEdit = () => {
               <TableCell align="center">DIRECTOR</TableCell>
               {/* <TableCell align="center">SCREEN TYPE</TableCell> */}
               <TableCell align="center">Edit</TableCell>
+              <TableCell align="center">Delete</TableCell>
               
             </TableRow>
           </TableHead>
@@ -142,6 +157,19 @@ const MovieListToEdit = () => {
                     }
                   >
                     Edit
+                  </Button>
+                </TableCell>
+                <TableCell align="center">
+                <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => {
+                      deleteMovie(row.mid);
+                      loadBookings();
+                      
+                    }}
+                  >
+                    Delete
                   </Button>
                 </TableCell>
               </TableRow>
