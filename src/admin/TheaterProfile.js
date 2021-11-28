@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useContext} from "react";
 import { useHistory } from "react-router";
 import TextField from "@material-ui/core/TextField";
+import { AuthContext } from "../firebase/AuthContext";
 
 //firebase
 import { auth, db } from "../firebase/firebase";
@@ -147,20 +148,21 @@ const TheaterProfile = () => {
   const [details, setDetails] = useState({
     email: "",
     password: "",
-    theatrename: "",
+    tname: "",
     location: "",
     capacity: "",
     type:""
   });
   const history = useHistory();
   const classes = useStyles();
+  const user = useContext(AuthContext);
   
   const setValue = (e) =>
   setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
   const [currency, setCurrency] = useState("");
 
   useEffect(async () => {
-  const docRef = doc(db, "users", "Ag9Pyp6uVsU40yHzdwpWdDDb3p33");
+  const docRef = doc(db, "users",  user.user.userDetails.uid);
   const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
     const data = docSnap.data();
@@ -216,7 +218,7 @@ const TheaterProfile = () => {
                 style={{ textAlign: "left" }}
               >
         
-            <p><strong>Theater Name:</strong> {details.theatrename}</p>
+            <p><strong>Theater Name:</strong> {details.tname}</p>
             <p><strong>Email:</strong> {details.email}</p>
             <p><strong>Password:</strong>  {details.password}</p>
             <p><strong>Location:</strong>  {details.location}</p>
