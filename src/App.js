@@ -16,33 +16,23 @@ import UserList from "./admin/UserList";
 import ScreenEdit from "./Screen/ScreenEdit";
 import TheaterProfile from "./admin/TheaterProfile";
 
-import ScreenSignUp from "./admin/screenSignUp";
-
-
-import EditTheatre from "./Theatre/EditTheatre"
+import EditTheatre from "./Theatre/EditTheatre";
 
 import MovieListToEdit from "./admin/MovieListToEdit";
-
-import ScreenView from "./Screen/ScreenView";
-import SignUp from "./Sign Up/SignUp";
 
 import AdminSignUp from "./Sign Up/AdminSignUp";
 
 import TheatreSignUp from "./admin/TheatreSignUp";
 import AddBooking from "./MovieBooking/AddBooking";
 import EditMovie from "./Movie/EditMovie";
-import ScreenSignUp from "./admin/ScreenSignUp";
 
 import ScreenAddSeat from "./ScreenOwner/ScreenAddSeat";
 import ScreenSeat from "./ScreenOwner/ScreenSeat";
 
 import TheatreHome from "./theatreHome/ThreatreHome";
 
-
-import AddMovie from "./Movie/AddMovie";
-import UserList from "./admin/UserList";
 import EditUsers from "./admin/EditUsers";
-import ViewUsers from "./admin/ViewUsers";
+
 import AdminProfileEdit from "./admin/AdminProfileEdit";
 import AdminHome from "./admin/AdminHome";
 
@@ -98,12 +88,6 @@ const App = () => {
           <UserList />
         </Route>
 
-       
-
-        <Route exact path="/view/:id">
-          <ViewUsers />
-        </Route>
-
         <Route exact path="/screen-list">
           <ScreenView />
         </Route>
@@ -116,14 +100,13 @@ const App = () => {
         </Route>
         <Route exact path="/theater-profile">
           <TheaterProfile />
-
+        </Route>
         <Route exact path="/edit-theatre">
           <EditTheatre />
-          </Route>
+        </Route>
         <Route exact path="/edit-users">
           <EditUsers />
-
-</Route>
+        </Route>
 
         <Route exact path="/view-bookings">
           <BookingList />
@@ -134,7 +117,6 @@ const App = () => {
 
         <Route exact path="/admin-home">
           <AdminHome />
-
         </Route>
       </Switch>
       <Footer />

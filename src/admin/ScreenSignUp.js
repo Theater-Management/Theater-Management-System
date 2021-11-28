@@ -3,11 +3,15 @@ import { useHistory } from "react-router";
 
 //firebase
 import { auth, db } from "../firebase/firebase";
-import { doc, setDoc ,getDocs, getFirestore,
+import {
+  doc,
+  setDoc,
+  getDocs,
+  getFirestore,
   collection,
   query,
-  where
- } from "firebase/firestore";
+  where,
+} from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 //mui
@@ -50,7 +54,6 @@ function createTheatreData(tid, tname) {
   return { tid, tname };
 }
 
-
 const ScreenSignUp = () => {
   const history = useHistory();
   const classes = useStyles();
@@ -58,14 +61,15 @@ const ScreenSignUp = () => {
   const [theatres, setTheatres] = useState([]);
   const [mrows, setMRows] = useState([]);
 
-
   const [details, setDetails] = useState({
     email: "",
     password: "",
     screentype: "",
-    noOfSeats:"",
-    theatre:"",
-    type:"",
+    noOfSeats: "",
+    theatre: "",
+    type: "",
+    sid: "",
+    tid: "",
   });
 
   useEffect(async () => {
@@ -81,17 +85,14 @@ const ScreenSignUp = () => {
       setMRows(theatres);
       //console.log(theatres[0].tid + " "+ theatres.length);
     });
-   
   }, []);
-
 
   const setValue = (e) =>
     setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
-    
 
   const handleSubmit = () => {
     history.push("user-list");
-   
+
     createUserWithEmailAndPassword(auth, details.email, details.password)
       .then((userCredential) => {
         // Signed in
@@ -99,15 +100,15 @@ const ScreenSignUp = () => {
         console.log(details);
 
         setDoc(doc(db, "users", user.uid), {
-          uid: user.uid,
+          sid: user.uid,
           email: details.email,
           password: details.password,
-          screentype:details.screentype,
-          theatre:details.theatre,
-          noOfSeats:details.noOfSeats,
-          type: "screen"
+          screentype: details.screentype,
+          // theatre:details.theatre,
+          noOfSeats: details.noOfSeats,
+          type: "screen",
+          tid: details.theatre,
         });
-       
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -129,9 +130,6 @@ const ScreenSignUp = () => {
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-      
-          
-
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -184,14 +182,13 @@ const ScreenSignUp = () => {
                 onChange={setValue}
               >
                 {mrows.map((theatre) => (
-                    <option key={theatre.tid} value={theatre.tid}>
-                      {theatre.tname}
-                    </option>
-                  ))}
-
+                  <option key={theatre.tid} value={theatre.tid}>
+                    {theatre.tname}
+                  </option>
+                ))}
               </Select>
             </Grid>
-           
+
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -216,7 +213,6 @@ const ScreenSignUp = () => {
           >
             Sign Up
           </Button>
-         
         </form>
       </div>
     </Container>

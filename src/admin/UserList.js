@@ -112,7 +112,7 @@ function createData(uname, email, gender, action) {
 const UserList = () => {
   const [nrows, setNrows] = useState([]);
   const [type, setType] = useState("viewer"); //user type
-  const [active, setActive] = useState(false);  //admin button active?
+  const [active, setActive] = useState(false); //admin button active?
   const [array, setArray] = useState([]);
 
   const deleteUser = async (uid) => {
@@ -132,12 +132,6 @@ const UserList = () => {
           // const email = doc.data().email.toLowerCase(); ---- issue
           const email = doc.data().email;
 
-<<<<<<< HEAD
-          //const email = doc.data().email.toLowerCase();
-        
-
-=======
->>>>>>> 4d7de1fb9228c3099f11801c46e0d540bb9c38a0
           const toTitleCase = (phrase) => {
             return phrase
               .toLowerCase()
