@@ -97,6 +97,7 @@ const ScreenSeat = () => {
   };
 
   const classes = useStyles();
+
   // Delete seat
   const deleteSeat = async (seatid) => {
     const docSnap = await getDoc(doc(db, "seat", seatid));
@@ -113,6 +114,7 @@ const ScreenSeat = () => {
       console.log("Not available!");
     }
   };
+
 
   return (
     <Container style={{ height: "100vh", marginTop: 10 }} maxWidth="md">
@@ -139,6 +141,7 @@ const ScreenSeat = () => {
                 <TableCell align="center">{row.seatid}</TableCell>
                 <TableCell align="center">{row.status}</TableCell>
                 <TableCell align="center">
+
                   // Delete seat button
                   <Button
                       variant="outlined"
@@ -150,7 +153,7 @@ const ScreenSeat = () => {
                   >
                     Delete
                   </Button>
-                </TableCell>
+   </TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -14,7 +14,7 @@ import SignUp from "./Sign Up/SignUp";
 import ScreenSeatBooked from "./ScreenOwner/ScreenSeatBooked";
 
 
-import AddMovie from "./Movie/AddMovie";
+
 import UserList from "./admin/UserList";
 import ScreenEdit from "./Screen/ScreenEdit";
 import TheaterProfile from "./admin/TheaterProfile";
@@ -30,26 +30,15 @@ import TheatreSignUp from "./admin/TheatreSignUp";
 import AddBooking from "./MovieBooking/AddBooking";
 import EditMovie from "./Movie/EditMovie";
 
-import ScreenSignUp from "./admin/ScreenSignUp";
+
 
 import ScreenAddSeat from "./ScreenOwner/ScreenAddSeat";
 import ScreenSeat from "./ScreenOwner/ScreenSeat";
-
-import TheatreHome from "./theatreHome/ThreatreHome";
-
-=======
-import ScreenAddSeat from "./ScreenOwner/ScreenAddSeat";
-import ScreenSeat from "./ScreenOwner/ScreenSeat";
-import TheatreHome from "./theatreHome/ThreatreHome";
-
+import ThreatreHome from "./theatreHome/ThreatreHome";
 import AddMovie from "./Movie/AddMovie";
-import UserList from "./admin/UserList";
 
 
-import ScreenAddSeat from "./ScreenOwner/ScreenAddSeat";
-import ScreenSeat from "./ScreenOwner/ScreenSeat";
 
-import TheatreHome from "./theatreHome/ThreatreHome";
 
 
 import EditUsers from "./admin/EditUsers";
@@ -73,7 +62,7 @@ const App = () => {
         </Route>
 
         <Route exact path="/theatrehome">
-          <TheatreHome />
+          <ThreatreHome />
         </Route>
 
         <Route exact path="/theatresignup">
@@ -127,7 +116,7 @@ const App = () => {
         </Route>
         <Route exact path="/theater-profile">
           <TheaterProfile />
-        </Route>
+</Route>
         <Route exact path="/edit-theatre">
           <EditTheatre />
         </Route>
