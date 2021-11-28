@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router";
+import { AuthContext } from "../firebase/AuthContext";
 
 //firebase
 import { auth, db } from "../firebase/firebase";
@@ -55,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
 const ScreenEdit = () => {
   const history = useHistory();
   const classes = useStyles();
+  const user = useContext(AuthContext);
 
 
   const [details, setDetails] = useState({
@@ -73,7 +75,7 @@ const ScreenEdit = () => {
   const [currency, setCurrency] = useState("");
 
   useEffect(async () => {
-    const docRef = doc(db, "users", "yy05taYUhCOFWx0Ii4PNaJ8I7Cp2");
+    const docRef = doc(db, "users", user.user.userDetails.uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
@@ -90,7 +92,7 @@ const ScreenEdit = () => {
   const editdetails = () => {
     console.log(details);
     history.push("user-list");
-    updateDoc(doc(db, "users", "yy05taYUhCOFWx0Ii4PNaJ8I7Cp2"), {
+    updateDoc(doc(db, "users", user.user.userDetails.uid), {
         ...details
       });
   };

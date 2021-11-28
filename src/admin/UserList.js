@@ -133,7 +133,6 @@ const UserList = () => {
           const email = doc.data().email;
 
 
-
           const toTitleCase = (phrase) => {
             return phrase
               .toLowerCase()
