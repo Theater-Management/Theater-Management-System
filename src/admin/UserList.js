@@ -2,26 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
 //firebase
-import { auth, db } from "../firebase/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase";
+import { doc } from "firebase/firestore";
 import {
   getFirestore,
   collection,
   query,
   where,
   getDocs,
-  updateDoc,
   deleteDoc,
-  getDoc,
 } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 //mui
 import Avatar from "@material-ui/core/Avatar";
-import { Fab } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -37,11 +32,6 @@ import Paper from "@material-ui/core/Paper";
 import TablePagination from "@material-ui/core/TablePagination";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Tooltip from "@material-ui/core/Tooltip";
-import CreateIcon from "@material-ui/icons/Create";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
 import Chip from "@material-ui/core/Chip";
 import FaceIcon from "@material-ui/icons/Face";
 
@@ -67,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -120,10 +110,9 @@ function createData(uname, email, gender, action) {
 }
 
 const UserList = () => {
-  const history = useHistory();
   const [nrows, setNrows] = useState([]);
-  const [type, setType] = useState("viewer");
-  const [active, setActive] = useState(false);
+  const [type, setType] = useState("viewer"); //user type
+  const [active, setActive] = useState(false);  //admin button active?
   const [array, setArray] = useState([]);
 
   const deleteUser = async (uid) => {
@@ -140,8 +129,9 @@ const UserList = () => {
       (query) => {
         query.forEach((doc) => {
           const uname = doc.data().fname + " " + doc.data().lname;
-          //const email = doc.data().email.toLowerCase();
+          // const email = doc.data().email.toLowerCase(); ---- issue
           const email = doc.data().email;
+
           const toTitleCase = (phrase) => {
             return phrase
               .toLowerCase()
@@ -180,7 +170,6 @@ const UserList = () => {
           );
         });
         setNrows(array);
-        //console.log(array);
       }
     );
   }, [type]);

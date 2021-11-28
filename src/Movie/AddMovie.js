@@ -129,8 +129,8 @@ const AddMovie = () => {
   const handleSubmit = () => {
     console.log(details);
 
-    /*
-   setDoc(doc(db, "Movie", "18"), {
+
+    setDoc(doc(db, "Movie", doc().id), {
       mid: details.mid,
       mname: details.mname,
       director: details.director,
@@ -139,7 +139,7 @@ const AddMovie = () => {
       theatre: details.theatre,
       screen: details.screen,
     });
- */
+ 
     setOpen(true);
     console.log("created: " + details);
   };
