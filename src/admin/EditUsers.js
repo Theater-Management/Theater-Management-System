@@ -1,7 +1,7 @@
 import {makeStyles} from "@material-ui/core/styles";
 import { useHistory } from "react-router";
-import React, {useEffect, useState} from "react";
-import {doc, getDoc} from "firebase/firestore";
+import React, {useEffect, useState, useContext} from "react";
+import {doc, getDoc, updateDoc} from "firebase/firestore";
 import {db} from "../firebase/firebase";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -10,6 +10,8 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import {Details} from "@material-ui/icons";
 import Button from "@material-ui/core/Button";
+import { AuthContext } from "../firebase/AuthContext";
+
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -31,136 +33,103 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-//==========NEW========================
-const users = [];
 
 const EditUsers = () => {
     const history = useHistory();
     const classes = useStyles();
+    const user = useContext(AuthContext);
 
     const [details, setDetails] = useState({
-        email: "",
-        uid: "",
         fname: "",
         lname: "",
-        gender: "",
+        email: "",
         password: "",
         type: "",
+        uid: "",
     });
 
     const setValue = (e) =>
         setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
-    const [currency, setCurrency] = useState("");
 
-    useEffect(async () => {
-        const docRef = doc(db, "users", "5C8QPRQ2rjxoUw6hjLJj");
-        const docSnap = await getDoc(docRef);
+    useEffect(async()=>{
+        const docSnap = await getDoc(doc(db,"users", user.user.userDetails.uid));
         if (docSnap.exists()) {
-            const data = docSnap.data();
-            const userData = { ...data };
-            setDetails({ ...userData });
-            users.push({
-                value: docSnap.data().email,
-                label: docSnap.data().uid,
-            });
-            console.log(users);
-            setCurrency(docSnap.data().email);
+            const udata = docSnap.data();
+            const userData = { ...udata };
+            console.log("booking seat id", userData);
+            setDetails({...userData})
+            console.log(details)
         } else {
-            // doc.data() will be undefined in this case
-
             console.log("No such document!");
-        }
-    }, []);
+        }},[]
+    )
 
-    const seedetails = () => {
-        console.log(details);
-    };
 
     return (
         <Container style={{ height: "100vh" }} maxWidth="xs">
             <CssBaseline />
             <div className={classes.paper}>
+
                 <Typography component="h1" variant="h5">
-                    Edit Users
+                    Edit User Profile
                 </Typography>
                 <form className={classes.form} noValidate>
                     <Grid container spacing={2}>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={6}>
                             <TextField
-                                id="standard-read-only-input"
-                                label="Email"
-                                value={details.email}
+                                autoComplete="fname"
+                                name="fname"
+                                variant="outlined"
+                                required
                                 fullWidth
-                                InputProps={{
-                                    readOnly: true,
-                                }}
+                                id="fname"
+                                label="First Name"
+                                value={details.fname}
+                                autoFocus
+                                onChange={setValue}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="lname"
+                                label="Last Name"
+                                name="lname"
+                                autoComplete="lname"
+                                value={details.lname}
+                                onChange={setValue}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <TextField
-                                id="standard-read-only-input"
-                                label="User ID"
-                                value={details.uid}
+                                variant="outlined"
+                                required
                                 fullWidth
-                                InputProps={{
-                                    readOnly: true,
-                                }}
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                disabled
+                                value={details.email}
+                                autoComplete="email"
+                                onChange={setValue}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                id="standard-first-name-input"
-                                label="First Name"
-                                value={details.fname}
+                                variant="outlined"
+                                required
                                 fullWidth
-                                InputProps={{
-                                    readOnly: false,
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                id="standard-last-name-input"
-                                label="Last Name"
-                                value={details.lname}
-                                fullWidth
-                                InputProps={{
-                                    readOnly: false,
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                id="standard-gender-input"
-                                label="Gender"
-                                value={details.gender}
-                                fullWidth
-                                InputProps={{
-                                    readOnly: false,
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                id="standard-password-input"
+                                name="password"
                                 label="Password"
+                                type="password"
+                                id="password"
+                                disabled
                                 value={details.password}
-                                fullWidth
-                                InputProps={{
-                                    readOnly: false,
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                id="standard-password-type"
-                                label="Type"
-                                value={details.type}
-                                fullWidth
-                                InputProps={{
-                                    readOnly: true,
-                                }}
+                                autoComplete="current-password"
+                                onChange={setValue}
                             />
                         </Grid>
                     </Grid>
@@ -169,9 +138,13 @@ const EditUsers = () => {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={seedetails}
+                        onClick={()=>{
+                            updateDoc(doc(db, "users", details.uid), {
+                                ...details
+                            });
+                        }}
                     >
-                        Edit Booking
+                        Edit
                     </Button>
                 </form>
             </div>

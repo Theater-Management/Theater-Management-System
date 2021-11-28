@@ -11,34 +11,54 @@ import ScreenSignUp from "./admin/ScreenSignUp";
 import ScreenView from "./Screen/ScreenView";
 import SignUp from "./Sign Up/SignUp";
 
+import ScreenSeatBooked from "./ScreenOwner/ScreenSeatBooked";
+
+
 import AddMovie from "./Movie/AddMovie";
 import UserList from "./admin/UserList";
 import ScreenEdit from "./Screen/ScreenEdit";
 import TheaterProfile from "./admin/TheaterProfile";
 
-import ScreenSignUp from "./admin/screenSignUp";
-
-
-import EditTheatre from "./Theatre/EditTheatre"
+import EditTheatre from "./Theatre/EditTheatre";
 
 import MovieListToEdit from "./admin/MovieListToEdit";
 
-import ScreenView from "./Screen/ScreenView";
-import SignUp from "./Sign Up/SignUp";
-import ScreenSeatBooked from "./ScreenOwner/ScreenSeatBooked";
+
 import AdminSignUp from "./Sign Up/AdminSignUp";
 import ScreenHome from "./ScreenOwner/ScreenHome";
 import TheatreSignUp from "./admin/TheatreSignUp";
 import AddBooking from "./MovieBooking/AddBooking";
 import EditMovie from "./Movie/EditMovie";
+
 import ScreenSignUp from "./admin/ScreenSignUp";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 719407aa4b317f66704f93820aae16b0164621bf
 import ScreenAddSeat from "./ScreenOwner/ScreenAddSeat";
 import ScreenSeat from "./ScreenOwner/ScreenSeat";
 import TheatreHome from "./theatreHome/ThreatreHome";
+<<<<<<< HEAD
+=======
+
+=======
+import ScreenAddSeat from "./ScreenOwner/ScreenAddSeat";
+import ScreenSeat from "./ScreenOwner/ScreenSeat";
+import TheatreHome from "./theatreHome/ThreatreHome";
+
+>>>>>>> 719407aa4b317f66704f93820aae16b0164621bf
 import AddMovie from "./Movie/AddMovie";
 import UserList from "./admin/UserList";
+
+
+import ScreenAddSeat from "./ScreenOwner/ScreenAddSeat";
+import ScreenSeat from "./ScreenOwner/ScreenSeat";
+
+import TheatreHome from "./theatreHome/ThreatreHome";
+
+
 import EditUsers from "./admin/EditUsers";
-import ViewUsers from "./admin/ViewUsers";
+
 import AdminProfileEdit from "./admin/AdminProfileEdit";
 import AdminHome from "./admin/AdminHome";
 
@@ -100,12 +120,6 @@ const App = () => {
           <UserList />
         </Route>
 
-       
-
-        <Route exact path="/view/:id">
-          <ViewUsers />
-        </Route>
-
         <Route exact path="/screen-list">
           <ScreenView />
         </Route>
@@ -118,14 +132,26 @@ const App = () => {
         </Route>
         <Route exact path="/theater-profile">
           <TheaterProfile />
+<<<<<<< HEAD
 </Route>
+=======
+        </Route>
+>>>>>>> 719407aa4b317f66704f93820aae16b0164621bf
         <Route exact path="/edit-theatre">
           <EditTheatre />
-          </Route>
+        </Route>
         <Route exact path="/edit-users">
           <EditUsers />
+<<<<<<< HEAD
 </Route>
         
+=======
+
+
+</Route>
+        
+
+>>>>>>> 719407aa4b317f66704f93820aae16b0164621bf
 
         <Route exact path="/view-bookings">
           <BookingList />
@@ -136,7 +162,6 @@ const App = () => {
 
         <Route exact path="/admin-home">
           <AdminHome />
-
         </Route>
       </Switch>
       <Footer />
