@@ -185,17 +185,4 @@ const TheatreSignUp = () => {
 };
 export default TheatreSignUp;
 
- //   const docSnap = await getDoc(doc(db, "seat", seatid));
-  //   if (docSnap.exists()) {
-  //     const bs = docSnap.data();
-  //     const bsd = { ...bs };
-  //     console.log("seat id", bsd.seatid);
-      
-
-  //     deleteDoc(doc(db, "seat", seatid));
-  //     loadSeats();
-  //     //=========================
-  //   } else {
-  //     console.log("No such document!");
-  //   }
-  // };
+ 
