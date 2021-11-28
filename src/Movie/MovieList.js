@@ -167,6 +167,8 @@ const MovieList = () => {
           View Movies
         </Typography>
         <Button
+          variant="contained"
+          color="primary"
           onClick={() => {
             history.push("/view-bookings");
           }}
