@@ -133,7 +133,7 @@ const rows = [
   createData("United States", "US", 327167434, 9833520),
 ];
 
-const ViewUsers = () => {
+const ScreenHome = () => {
   const [details, setDetails] = useState({
     fname: "",
     lname: "",
@@ -211,4 +211,4 @@ const ViewUsers = () => {
     </Container>
   );
 };
-export default ViewUsers;
+export default ScreenHome;
