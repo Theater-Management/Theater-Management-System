@@ -30,8 +30,8 @@ import { Button, Grid, Modal } from "@material-ui/core";
 
 import { Search } from "@material-ui/icons";
 
-function createData(seatid, status, screenType) {
-  return {seatid, status, screenType};
+function createData(seatid, status, screentype) {
+  return {seatid, status, screentype};
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -53,42 +53,43 @@ const ScreenSeat = () => {
   const user = useContext(AuthContext);
   console.log(user.user.userDetails);
   const [rows, setRows] = useState([]);
-  const [screenType, setscreentype] = useState("");
+  const [theatreName, setTheaterName] = useState("");
   const [array, setArray] = useState([]);
+
   useEffect(() => {
     setArray([]);
+    
     getDocs(
       query(
         collection(db, "seat"),
-        where("sid", "==",  user.user.userDetails.uid)
+        where("sid", "==", user.user.userDetails.uid)
         
       )
     ).then((query) => {
       query.forEach((doc) => {
-        if(doc.data().status == "available"){
+        if(doc.data().status == "booked"){
           console.log(doc.id, " => ", doc.data());
-         
-          
-          array.push(createData(doc.data().seatid, doc.data().status,  user.user.userDetails.screentype));
+          console.log("screen id ", doc.data().sid);
+          array.push(createData(doc.data().seatid, doc.data().status, user.user.userDetails.screentype));
         }
 
       });
       setRows(array);
       console.log(array);
     });
-  }, [screenType]);
+  }, [theatreName]);
 
   const loadSeats = () => {
     setArray([]);
     getDocs(
       query(
         collection(db, "seat"),
-        where("sid", "==",user.user.userDetails.uid)
+        where("sid", "==", user.user.userDetails.uid)
       )
     ).then((query) => {
       query.forEach((doc) => {
         //console.log(doc.id, " => ", doc.data());
-        
+      
         array.push(createData(doc.data().seatid, doc.data().status));
       });
       setRows(array);
@@ -98,25 +99,11 @@ const ScreenSeat = () => {
 
   const classes = useStyles();
 
-  const deleteSeat = async (seatid) => {
-    const docSnap = await getDoc(doc(db, "seat", seatid));
-    if (docSnap.exists()) {
-      const bs = docSnap.data();
-      const bsd = { ...bs };
-      console.log("seat id", bsd.seatid);
-      
-
-      deleteDoc(doc(db, "seat", seatid));
-      loadSeats();
-      //=========================
-    } else {
-      console.log("No such document!");
-    }
-  };
+  
 
   return (
     <Container style={{ height: "100vh", marginTop: 10 }} maxWidth="md">
-        <h1>Screen type - Theatre</h1>
+        <h1>Screen type - Theatree</h1>
         <Button
                     variant="outlined"
                     color="primary"
@@ -130,7 +117,6 @@ const ScreenSeat = () => {
             <TableRow>
               <TableCell align="center">Seat Number</TableCell>
               <TableCell align="center">availability</TableCell>
-              <TableCell align="center">Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -138,18 +124,7 @@ const ScreenSeat = () => {
               <TableRow hover key={row.name}>
                 <TableCell align="center">{row.seatid}</TableCell>
                 <TableCell align="center">{row.status}</TableCell>
-                <TableCell align="center">
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={() => {
-                      deleteSeat(row.seatid);
-                      console.log(row.seatid);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
+                
               </TableRow>
             ))}
           </TableBody>
