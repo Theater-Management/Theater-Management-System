@@ -61,7 +61,7 @@ const TheatreSignUp = () => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-
+// =========================================
         setDoc(doc(db, "users", user.uid), {
           theatrename: details.theatrename,
           location: details.location,
