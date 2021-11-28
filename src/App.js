@@ -9,16 +9,24 @@ import NavBar from "./OtherPages/NavBar";
 import MovieListToEdit from "./admin/MovieListToEdit";
 import ScreenView from "./Screen/ScreenView";
 import SignUp from "./Sign Up/SignUp";
+
+import AdminSignUp from "./Sign Up/AdminSignUp";
+
 import TheatreSignUp from "./admin/TheatreSignUp";
 import AddBooking from "./MovieBooking/AddBooking";
 import EditMovie from "./Movie/EditMovie";
 import ScreenSignUp from "./admin/ScreenSignUp";
+<<<<<<< HEAD
 import ScreenAddSeat from "./ScreenOwner/ScreenAddSeat";
 import ScreenSeat from "./ScreenOwner/ScreenSeat";
+=======
+import TheatreHome from "./theatreHome/ThreatreHome";
+>>>>>>> 4d7de1fb9228c3099f11801c46e0d540bb9c38a0
 import AddMovie from "./Movie/AddMovie";
 import UserList from "./admin/UserList";
 import EditUsers from "./admin/EditUsers";
 import ViewUsers from "./admin/ViewUsers";
+import AdminProfileEdit from "./admin/AdminProfileEdit";
 
 const App = () => {
   return (
@@ -28,13 +36,21 @@ const App = () => {
         <Route exact path="/">
           <Home />
         </Route>
+        <Route exact path="/adminsignup">
+          <AdminSignUp />
+        </Route>
         <Route exact path="/signup">
           <SignUp />
         </Route>
 
-          <Route exact path="/theatresignup">
-            <TheatreSignUp />
-          </Route>
+        <Route exact path="/theatrehome">
+          <TheatreHome />
+        </Route>
+
+
+        <Route exact path="/theatresignup">
+          <TheatreSignUp />
+        </Route>
 
         <Route exact path="/screensignup">
           <ScreenSignUp />
@@ -76,10 +92,17 @@ const App = () => {
 
         <Route exact path="/edit-users">
           <EditUsers />
+<<<<<<< HEAD
 </Route>
+=======
+        </Route>
+
+>>>>>>> 4d7de1fb9228c3099f11801c46e0d540bb9c38a0
         <Route exact path="/view-bookings">
           <BookingList />
-
+        </Route>
+        <Route exact path="/edit-admin">
+          <AdminProfileEdit/>
         </Route>
       </Switch>
       <Footer />

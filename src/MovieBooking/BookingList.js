@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { AuthContext } from "../firebase/AuthContext";
 //firebase
 import { auth, db } from "../firebase/firebase";
 import { doc, setDoc } from "firebase/firestore";
@@ -29,8 +30,8 @@ import { Button, Grid, Modal } from "@material-ui/core";
 
 import { Search } from "@material-ui/icons";
 
-function createData(bid, email, movie) {
-  return { bid, email, movie };
+function createData(bid, email, movie, seatId) {
+  return { bid, email, movie, seatId };
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -49,6 +50,8 @@ const useStyles = makeStyles((theme) => ({
 
 const ScreenView = () => {
   const history = useHistory();
+  const user = useContext(AuthContext);
+  console.log(user.user.userDetails);
   const [rows, setRows] = useState([]);
   const [moviename, setMovieName] = useState("");
   const [array, setArray] = useState([]);
@@ -57,14 +60,21 @@ const ScreenView = () => {
     getDocs(
       query(
         collection(db, "movieBooking"),
-        where("uid", "==", "5pC4kWUIw9hqxBeER9j4XShSJ1u2")
+        where("uid", "==", user.user.userDetails.uid)
       )
     ).then((query) => {
       query.forEach((doc) => {
         console.log(doc.id, " => ", doc.data());
         console.log("mid id ", doc.data().mid);
         getMovieName(doc.data().mid);
-        array.push(createData(doc.data().bid, doc.data().email, moviename));
+        array.push(
+          createData(
+            doc.data().bid,
+            doc.data().email,
+            moviename,
+            doc.data().seatid
+          )
+        );
       });
       setRows(array);
       console.log(array);
@@ -82,7 +92,14 @@ const ScreenView = () => {
       query.forEach((doc) => {
         //console.log(doc.id, " => ", doc.data());
         getMovieName(doc.data().mid);
-        array.push(createData(doc.data().bid, doc.data().email, moviename));
+        array.push(
+          createData(
+            doc.data().bid,
+            doc.data().email,
+            moviename,
+            doc.data().seatid
+          )
+        );
       });
       setRows(array);
       console.log(array);
@@ -133,6 +150,7 @@ const ScreenView = () => {
               <TableCell align="center">BookingID</TableCell>
               <TableCell align="center">Email</TableCell>
               <TableCell align="center">Movie</TableCell>
+              <TableCell align="center">Seat Number</TableCell>
               <TableCell align="center">Edit</TableCell>
               <TableCell align="center">Delete</TableCell>
             </TableRow>
@@ -143,6 +161,7 @@ const ScreenView = () => {
                 <TableCell align="center">{row.bid}</TableCell>
                 <TableCell align="center">{row.email}</TableCell>
                 <TableCell align="center">{row.movie}</TableCell>
+                <TableCell align="center">{row.seatId}</TableCell>
                 <TableCell align="center">
                   <Button
                     variant="outlined"
