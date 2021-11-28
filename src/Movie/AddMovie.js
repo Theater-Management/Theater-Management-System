@@ -22,9 +22,9 @@ import Container from "@material-ui/core/Container";
 import Select from "@material-ui/core/Select";
 import { FormControl, InputLabel } from "@material-ui/core";
 import MovieFilterIcon from "@material-ui/icons/MovieFilter";
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles((theme) => ({
@@ -91,24 +91,25 @@ const AddMovie = () => {
         theatres.push(createTheatreData(doc.data().tid, doc.data().tname));
       });
       setMRows(theatres);
-      console.log(theatres.tid + " "+ theatres.length);
+      console.log(theatres.tid + " " + theatres.length);
     });
     setScreens([]);
     console.log("Screen:- ");
-    getDocs(query(collection(db, "users"), where("theatre", "==", details.theatre , "&&","type", "==", "screen"))).then(
-      (query) => {
-        query.forEach((docS) => {
-          console.log(docS.id, " => ", docS.data());
-          screens.push(
-            createScreenData(docS.data().sid, docS.data().screenType)
-          );
-        });
-        setRows(screens);
-        //console.log(theatres[0].tid + " "+ theatres.length);
-      }
-    );
+    getDocs(
+      query(
+        collection(db, "users"),
+        where("theatre", "==", details.theatre, "&&", "type", "==", "screen")
+      )
+    ).then((query) => {
+      query.forEach((docS) => {
+        console.log(docS.id, " => ", docS.data());
+        screens.push(createScreenData(docS.data().sid, docS.data().screenType));
+      });
+      setRows(screens);
+      //console.log(theatres[0].tid + " "+ theatres.length);
+    });
   }, [details]);
-  
+
   const setValue = (e) =>
     setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
   const handleReset = () => {
@@ -129,9 +130,10 @@ const AddMovie = () => {
   const handleSubmit = () => {
     console.log(details);
 
+    const moviedocRef = doc(collection(db, "Movie"));
 
-    setDoc(doc(db, "Movie", doc().id), {
-      mid: details.mid,
+    setDoc(moviedocRef, {
+      mid: moviedocRef.id,
       mname: details.mname,
       director: details.director,
       cast: details.cast,
@@ -139,21 +141,21 @@ const AddMovie = () => {
       theatre: details.theatre,
       screen: details.screen,
     });
- 
+
     setOpen(true);
     console.log("created: " + details);
   };
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
     setOpen(false);
     setTimeout(() => {
-        console.log('Hello, World!')
-      }, 2000);
-      history.push("movie-list");
+      console.log("Hello, World!");
+    }, 2000);
+    history.push("movie-list");
   };
 
   return (
@@ -261,7 +263,6 @@ const AddMovie = () => {
                 </Select>
               </FormControl>
             </Grid>
-            
 
             <Grid item xs={12}>
               <TextField
@@ -331,27 +332,27 @@ const AddMovie = () => {
                 Clear
               </Button>
               <Snackbar
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            open={open}
-            autoHideDuration={6000}
-            onClose={handleClose}
-            message="New Movie Added Succefully!"
-            action={
-              <React.Fragment>
-                <IconButton
-                  size="small"
-                  aria-label="close"
-                  color="inherit"
-                  onClick={handleClose}
-                >
-                  <CloseIcon fontSize="small" />
-                </IconButton>
-              </React.Fragment>
-            }
-          />
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                message="New Movie Added Succefully!"
+                action={
+                  <React.Fragment>
+                    <IconButton
+                      size="small"
+                      aria-label="close"
+                      color="inherit"
+                      onClick={handleClose}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </React.Fragment>
+                }
+              />
             </Grid>
           </Grid>
         </form>
