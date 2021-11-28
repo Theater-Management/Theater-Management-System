@@ -170,6 +170,9 @@ const AdminHome = () => {
           <Button onClick={() => history.push("/edit-admin")}>
             Edit Profile
           </Button>
+          <Button onClick={() => history.push("/movieeditlist")}>
+            Edit Movies
+          </Button>
           <Button onClick={() => history.push("/screen-list")}>
             Screen List
           </Button>
