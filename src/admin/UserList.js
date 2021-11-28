@@ -2,23 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
 //firebase
-import { auth, db } from "../firebase/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase";
+import { doc } from "firebase/firestore";
 import {
   getFirestore,
   collection,
   query,
   where,
   getDocs,
-  updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 //mui
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -34,8 +32,12 @@ import Paper from "@material-ui/core/Paper";
 import TablePagination from "@material-ui/core/TablePagination";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Tooltip from "@material-ui/core/Tooltip";
-import CreateIcon from "@material-ui/icons/Create";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import Chip from "@material-ui/core/Chip";
+import FaceIcon from "@material-ui/icons/Face";
+
+function createUserData(uid, email, gender) {
+  return { uid, email, gender };
+}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -55,14 +57,27 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(3),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  button: { width: "90px" },
   table: {
     minWidth: 1500,
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  mpaper: {
+    backgroundColor: theme.palette.background.paper,
+    border: "4px solid #fff000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 4),
+    width: "600px",
   },
 }));
 
@@ -78,7 +93,7 @@ const columns = [
   {
     id: "gender",
     label: "Gender",
-    minWidth: 50,
+    minWidth: 100,
     align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
@@ -95,23 +110,34 @@ function createData(uname, email, gender, action) {
 }
 
 const UserList = () => {
-  const history = useHistory();
   const [nrows, setNrows] = useState([]);
-  const [type, setType] = useState("viewer");
-  const [active, setActive] = useState(false);
+  const [type, setType] = useState("viewer"); //user type
+  const [active, setActive] = useState(false);  //admin button active?
   const [array, setArray] = useState([]);
+
+  const deleteUser = async (uid) => {
+    const userId = doc(db, "users", uid);
+    await deleteDoc(userId);
+    window.location.reload(false);
+  };
 
   useEffect(async () => {
     setArray([]);
-    //let utype = type.toString();
+
     const utype = type.toString();
-    console.log("user: " + type);
     getDocs(query(collection(db, "users"), where("type", "==", utype))).then(
       (query) => {
         query.forEach((doc) => {
-          console.log(doc.id, " => ", doc.data());
           const uname = doc.data().fname + " " + doc.data().lname;
-          const email = doc.data().email.toLowerCase();
+          // const email = doc.data().email.toLowerCase(); ---- issue
+          const email = doc.data().email;
+
+<<<<<<< HEAD
+          //const email = doc.data().email.toLowerCase();
+        
+
+=======
+>>>>>>> 4d7de1fb9228c3099f11801c46e0d540bb9c38a0
           const toTitleCase = (phrase) => {
             return phrase
               .toLowerCase()
@@ -128,47 +154,28 @@ const UserList = () => {
               email,
               doc.data().gender,
               <span>
-                <Tooltip title="View" placement="top">
-                  <a href="/view">
-                    <IconButton
-                      aria-label="view"
-                      size="small"
-                      style={{ color: "#6a1b9a", backgroundColor: "#e1bee7" }}
-                    >
-                      <MoreHorizIcon fontSize="small" />
-                    </IconButton>
-                  </a>
-                </Tooltip>{" "}
-                &nbsp;
-                <Tooltip title="Edit" placement="bottom">
-                  <a href="/edit">
-                    <IconButton
-                      aria-label="edit"
-                      size="small"
-                      style={{ color: "#00695c", backgroundColor: "#b2dfdb" }}
-                    >
-                      <CreateIcon fontSize="small" />
-                    </IconButton>
-                  </a>
-                </Tooltip>{" "}
-                &nbsp;
-                <Tooltip title="Delete" placement="right">
-                  <a href="/delete">
-                    <IconButton
-                      aria-label="delete"
-                      size="small"
-                      style={{ color: "#ff6f00", backgroundColor: "#ffecb3" }}
-                    >
-                      <DeleteForeverIcon fontSize="small" />
-                    </IconButton>
-                  </a>
-                </Tooltip>
+                {!active ? (
+                  <Tooltip title="Delete" placement="right">
+                    <Chip
+                      label="Remove User"
+                      onClick={() => {
+                        deleteUser(doc.id);
+                      }}
+                      style={{
+                        color: "#00695c",
+                        backgroundColor: "#b2dfdb",
+                      }}
+                      icon={<DeleteForeverIcon />}
+                    />
+                  </Tooltip>
+                ) : (
+                  <Chip icon={<FaceIcon />} label="User - Admin" />
+                )}
               </span>
             )
           );
         });
         setNrows(array);
-        //console.log(array);
       }
     );
   }, [type]);
@@ -210,17 +217,19 @@ const UserList = () => {
             aria-label="outlined secondary button group"
           >
             <Button
-              style={{ backgroundColor: active ? "#536dfe" : "#8c9eff" }}
+              variant="contained"
+              color={active ? "primary" : "light"}
               onClick={() => {
                 setActive(true);
-                setType("screen");
-                console.log("screen");
+                setType("admin");
+                console.log("admin");
               }}
             >
               Admin
             </Button>
             <Button
-              style={{ backgroundColor: active ? "#8c9eff" : "#536dfe" }}
+              variant="contained"
+              color={active ? "dark" : "primary"}
               onClick={() => {
                 setActive(false);
                 setType("viewer");

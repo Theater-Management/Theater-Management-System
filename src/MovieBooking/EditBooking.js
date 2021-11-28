@@ -1,35 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 
 //firebase
 import { auth, db } from "../firebase/firebase";
-import { doc, setDoc } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { doc } from "firebase/firestore";
 import {
-  getFirestore,
   collection,
   query,
   where,
   getDoc,
+  getDocs,
   updateDoc,
 } from "firebase/firestore";
 
 //mui
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Select from "@material-ui/core/Select";
-import { FormControl, InputLabel } from "@material-ui/core";
 import { Details } from "@material-ui/icons";
+import { NativeSelect, Select } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -52,13 +45,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //==========NEW========================
-const movies = [];
+const seat = [];
 
 const EditBooking = () => {
   const history = useHistory();
+  const location = useLocation();
+
+  const [seats, setSeats] = useState("");
   const classes = useStyles();
 
   const [details, setDetails] = useState({
+    bid: "",
     email: "",
     uid: "",
     tid: "",
@@ -69,30 +66,83 @@ const EditBooking = () => {
 
   const setValue = (e) =>
     setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
-  const [currency, setCurrency] = useState("");
+
+  const [screen, setScreen] = useState("");
+
+  const [movieName, setmovieName] = useState("");
+  const [theatreName, setTheaterName] = useState("");
+  const [screenType, setScreenType] = useState("");
+
+  const [prevseatid, setPrevSeatId] = useState("");
 
   useEffect(async () => {
-    const docRef = doc(db, "movieBooking", "rW2WilaNsiQUvq6Okhcb");
+    setSeats([]);
+    const docRef = doc(db, "movieBooking", location.state.row.bid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
       const userData = { ...data };
+      console.log("udat", userData);
       setDetails({ ...userData });
-      movies.push({
-        value: docSnap.data().email,
-        label: docSnap.data().mid,
-      });
-      console.log(movies);
-      setCurrency(docSnap.data().email);
-    } else {
-      // doc.data() will be undefined in this case
+      getScreenType(userData.sid);
+      setmovieName(location.state.row.movie);
 
+      setPrevSeatId(userData.seatid);
+      //=====================================
+      console.log("location details", location.state.row);
+      const docSnap2 = await getDoc(doc(db, "users", userData.tid));
+      if (docSnap.exists()) {
+        const tdata = docSnap2.data();
+        const TData = { ...tdata };
+        console.log("therater data", TData);
+        setTheaterName(TData.tname);
+      }
+      //====================================
+      getDocs(
+        query(collection(db, "seat"), where("sid", "==", userData.sid))
+      ).then((query) => {
+        query.forEach((doc) => {
+          if (doc.data().status == "available") {
+            seat.push({
+              label: doc.data().seatid,
+              value: doc.data().seatid,
+            });
+          }
+        });
+        setSeats(details.seatid);
+      });
+
+      //======================================
+      console.log("seats in useeffect ", seats);
+    } else {
       console.log("No such document!");
     }
   }, []);
 
-  const seedetails = () => {
+  const getScreenType = async (sid) => {
+    const docSnap = await getDoc(doc(db, "users", sid));
+    if (docSnap.exists()) {
+      const screen = docSnap.data();
+      const screenData = { ...screen };
+      console.log("screen data ", screenData);
+      setScreenType(docSnap.data().screenType);
+    } else {
+      console.log("No such document!");
+    }
+  };
+
+  const editBooking = () => {
     console.log(details);
+    updateDoc(doc(db, "movieBooking", details.bid), {
+      ...details,
+    });
+    updateDoc(doc(db, "seat", details.seatid), {
+      status: "booked",
+    });
+    updateDoc(doc(db, "seat", prevseatid), {
+      status: "available",
+    });
+    history.push("/view-bookings");
   };
 
   return (
@@ -119,73 +169,63 @@ const EditBooking = () => {
             <Grid item xs={12}>
               <TextField
                 id="standard-select-movie-native"
-                select
                 fullWidth
                 label="Movie Id"
-                value={currency}
-                SelectProps={{
-                  native: true,
+                value={movieName}
+                InputProps={{
+                  readOnly: true,
                 }}
-              >
-                {movies.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 id="standard-select-theater-native"
-                select
                 fullWidth
                 label="Theater Id"
-                value={details.tid}
-              >
-                {movies.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
+                value={theatreName}
+                InputProps={{
+                  readOnly: true,
+                }}
+                readOnly
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 id="standard-select-screen-native"
-                select
                 fullWidth
                 label="screen Id"
-                value={details.sid}
-              >
-                {movies.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
+                value={screenType}
+                InputProps={{
+                  readOnly: true,
+                }}
+              ></TextField>
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                id="standard-select-seat-native"
-                select
+              <NativeSelect
+                value={details.seatid}
+                onChange={(e) => {
+                  setValue(e);
+                  console.log(details);
+                }}
+                name="seatid"
                 fullWidth
-                label="seat Id"
-                value={Details.seatid}
+                className={classes.selectEmpty}
+                inputProps={{ "aria-label": "age" }}
               >
-                {movies.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
+                <option value={details.seatid}>{details.seatid}</option>
+                {seat.map((option) => (
+                  <option value={option.value}>{option.label}</option>
                 ))}
-              </TextField>
+              </NativeSelect>
             </Grid>
           </Grid>
+
           <Button
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={seedetails}
+            onClick={editBooking}
           >
             Edit Booking
           </Button>
