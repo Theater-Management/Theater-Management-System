@@ -87,8 +87,8 @@ const HomePage = () => {
             case "viewer":
               history.push("/movie-list");
               break;
-            case "theater":
-              history.push("/theater");
+            case "theatre":
+              history.push("/theatrehome");
               break;
             case "screen":
               history.push("/screens");
