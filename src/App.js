@@ -31,9 +31,17 @@ import AddBooking from "./MovieBooking/AddBooking";
 import EditMovie from "./Movie/EditMovie";
 
 import ScreenSignUp from "./admin/ScreenSignUp";
+
+import ScreenAddSeat from "./ScreenOwner/ScreenAddSeat";
+import ScreenSeat from "./ScreenOwner/ScreenSeat";
+
+import TheatreHome from "./theatreHome/ThreatreHome";
+
+=======
 import ScreenAddSeat from "./ScreenOwner/ScreenAddSeat";
 import ScreenSeat from "./ScreenOwner/ScreenSeat";
 import TheatreHome from "./theatreHome/ThreatreHome";
+
 import AddMovie from "./Movie/AddMovie";
 import UserList from "./admin/UserList";
 
@@ -125,6 +133,7 @@ const App = () => {
         </Route>
         <Route exact path="/edit-users">
           <EditUsers />
+
 
 </Route>
         
