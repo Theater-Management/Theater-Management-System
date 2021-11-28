@@ -47,7 +47,6 @@ const App = () => {
           <TheatreHome />
         </Route>
 
-
         <Route exact path="/theatresignup">
           <TheatreSignUp />
         </Route>
@@ -102,7 +101,7 @@ const App = () => {
           <BookingList />
         </Route>
         <Route exact path="/edit-admin">
-          <AdminProfileEdit/>
+          <AdminProfileEdit />
         </Route>
       </Switch>
       <Footer />
