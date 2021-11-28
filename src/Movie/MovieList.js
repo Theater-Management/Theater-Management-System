@@ -151,6 +151,7 @@ const MovieList = () => {
 
   return (
     <Container style={{ minHeight: "80vh" }} maxWidth="sm">
+     
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar
@@ -171,6 +172,17 @@ const MovieList = () => {
           color="primary"
           onClick={() => {
             history.push("/view-bookings");
+            
+          }}
+        >
+          View Bookings
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            history.push("/addbooking");
+            
           }}
         >
           View Bookings
