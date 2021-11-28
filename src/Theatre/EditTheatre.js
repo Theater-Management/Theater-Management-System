@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router";
-import HomePage from "../Home/HomePage";
+import { AuthContext } from "../firebase/AuthContext";
 
 //firebase
 import { auth, db } from "../firebase/firebase";
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 const EditTheatre = () => {
   const history = useHistory();
   const classes = useStyles();
-
+  const user = useContext(AuthContext);
   const [details, setDetails] = useState({
     theatrename: "",
     location: "",
@@ -56,20 +56,21 @@ const EditTheatre = () => {
     setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
 
   useEffect(async () => {
-    const docRef = doc(db, "users", "zZ1bekHbS6TYIWELeTob");
+    const docRef = doc(db, "users", user.user.userDetails.uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
       console.log(data);
       const userData = { ...data };
       setDetails({
-        theatrename: data.tname,
+        theatrename: data.theatrename,
         location: data.location,
         capacity: data.capacity,
         email: data.email,
       });
 
       console.log("usern: " + details.theatrename);
+      console.log("uid-:"+user.user.userDetails.uid);
     } else {
       console.log("No such document!");
     }
@@ -79,11 +80,12 @@ const EditTheatre = () => {
 
   const handleUpdate = () => {
     console.log(details);
+    
     //==============================
     // Signed in
-    const userId = "zZ1bekHbS6TYIWELeTob";
+    const userId = user.user.userDetails.uid;
     updateDoc(doc(db, "users", userId), {
-      tname: details.theatrename,
+        theatrename: details.theatrename,
       location: details.location,
       capacity: details.capacity,
       email: details.email,

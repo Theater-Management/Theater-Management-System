@@ -82,7 +82,7 @@ const TheatreSignUp = () => {
             });
 
         //==============================
-        history.push("movie-list");
+        history.push("theatrehome");
         //------------------------------------------------------
     };
 

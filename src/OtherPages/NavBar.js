@@ -62,6 +62,7 @@ const NavBar = () => {
             >Edit Theatre</Button>
             <Button style={{ color: "white" }}>Movie List</Button>
             <Button
+            onClick={() => history.push("/movie-list")}
               style={{ color: "white" }}
               onClick={() => history.push("/add-movie")}
             >
