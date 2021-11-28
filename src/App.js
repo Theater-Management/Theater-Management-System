@@ -24,6 +24,7 @@ import UserList from "./admin/UserList";
 import EditUsers from "./admin/EditUsers";
 import ViewUsers from "./admin/ViewUsers";
 import AdminProfileEdit from "./admin/AdminProfileEdit";
+import AdminHome from "./admin/AdminHome";
 
 const App = () => {
   return (
@@ -43,7 +44,6 @@ const App = () => {
         <Route exact path="/theatrehome">
           <TheatreHome />
         </Route>
-
 
         <Route exact path="/theatresignup">
           <TheatreSignUp />
@@ -102,7 +102,11 @@ const App = () => {
           <BookingList />
         </Route>
         <Route exact path="/edit-admin">
-          <AdminProfileEdit/>
+          <AdminProfileEdit />
+        </Route>
+
+        <Route exact path="/admin-home">
+          <AdminHome />
         </Route>
       </Switch>
       <Footer />
