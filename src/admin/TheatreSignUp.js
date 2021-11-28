@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 //firebase
-import { auth, db } from "../firebase/firebase";
-import { makeStyles } from "@material-ui/core/styles";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import {auth, db} from "../firebase/firebase";
+import {makeStyles} from "@material-ui/core/styles";
+import {createUserWithEmailAndPassword} from "firebase/auth";
+import {doc, setDoc} from "firebase/firestore";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Avatar from "@material-ui/core/Avatar";
@@ -17,75 +17,72 @@ import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 // import TheaterComedyIcon from '@mui/icons-material/TheaterComedy';
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+    paper: {
+        marginTop: theme.spacing(8),
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+    },
+    avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+        width: "100%", // Fix IE 11 issue.
+        marginTop: theme.spacing(3),
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
 }));
 const TheatreSignUp = () => {
-  const history = useHistory();
-  const classes = useStyles();
 
-  const [details, setDetails] = useState({
-    theatrename: "",
-    location: "",
-    capacity: "",
-    email: "",
-    password: "",
-    type: "",
-    tid: "",
-  });
+    const history = useHistory();
+    const classes = useStyles();
 
-  const setValue = (e) =>
-    setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
+    const [details, setDetails] = useState({
+        theatrename: "",
+        location: "",
+        capacity: "",
+        email: "",
+        password: "",
+        type: "",
+    });
 
-  const handleSubmit = () => {
-    console.log(details);
+    const setValue = (e) =>
+        setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
 
-    console.log(details);
-    //===============================
-    createUserWithEmailAndPassword(auth, details.email, details.password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
 
-        setDoc(doc(db, "users", user.uid), {
-          theatrename: details.theatrename,
-          location: details.location,
-          capacity: details.capacity,
-          email: details.email,
-          password: details.password,
-          type: "theatre",
-          tid: user.uid,
-        });
+    const handleSubmit = () => {
+        console.log(details);
 
-        console.log("created");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
-      });
+        console.log(details);
+        //===============================
+        createUserWithEmailAndPassword(auth, details.email, details.password)
+            .then((userCredential) => {
+                // Signed in
+                const user = userCredential.user;
 
-  };
+                setDoc(doc(db, "users", user.uid), {
+                    theatrename: details.theatrename,
+                    location: details.location,
+                    capacity: details.capacity,
+                    email: details.email,
+                    password: details.password,
+                    type: "theatre",
 
- 
+                });
+
+                console.log("created");
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // ..
+            });
 
         //==============================
-        history.push("theatrehome");
+        history.push("movie-list");
         //------------------------------------------------------
     };
 

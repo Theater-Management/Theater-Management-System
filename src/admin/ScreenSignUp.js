@@ -64,7 +64,7 @@ const ScreenSignUp = () => {
     password: "",
     screentype: "",
     noOfSeats:"",
-    theatre:"",
+    tid:"",
     type:"",
   });
 
@@ -99,11 +99,11 @@ const ScreenSignUp = () => {
         console.log(details);
 
         setDoc(doc(db, "users", user.uid), {
-          uid: user.uid,
+          sid: user.uid,
           email: details.email,
           password: details.password,
           screentype:details.screentype,
-          theatre:details.theatre,
+          tid:details.tid,
           noOfSeats:details.noOfSeats,
           type: "screen"
         });
@@ -177,9 +177,11 @@ const ScreenSignUp = () => {
               <Select
                 variant="outlined"
                 required
+                select
+                label="theater"
                 fullWidth
-                value={details.theatre}
-                name="theater"
+                value={details.tid}
+                name="tid"
                 id="tid"
                 onChange={setValue}
               >
