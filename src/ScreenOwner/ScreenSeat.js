@@ -98,6 +98,22 @@ const ScreenSeat = () => {
 
   const classes = useStyles();
 
+  // Delete seat
+  const deleteSeat = async (seatid) => {
+    const docSnap = await getDoc(doc(db, "seat", seatid));
+    if (docSnap.exists()) {
+      const bs = docSnap.data();
+      const bsd = { ...bs };
+      console.log("seat id", bsd.seatid);
+
+
+      deleteDoc(doc(db, "seat", seatid));
+      loadSeats();
+
+    } else {
+      console.log("Not available!");
+    }
+  };
 
 
   return (
@@ -125,8 +141,19 @@ const ScreenSeat = () => {
                 <TableCell align="center">{row.seatid}</TableCell>
                 <TableCell align="center">{row.status}</TableCell>
                 <TableCell align="center">
-                 
-                </TableCell>
+
+                  // Delete seat button
+                  <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={() => {
+                        deleteSeat(row.seatid);
+                        console.log(row.seatid);
+                      }}
+                  >
+                    Delete
+                  </Button>
+   </TableCell>
               </TableRow>
             ))}
           </TableBody>
