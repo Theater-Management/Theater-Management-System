@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import TextField from "@material-ui/core/TextField";
 
 //firebase
 import { auth, db } from "../firebase/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+    getFirestore,
+    collection,
+    query,
+    where,
+    getDoc,
+    updateDoc,
+  } from "firebase/firestore";
 
 //mui
+import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -133,18 +143,38 @@ const rows = [
   createData("United States", "US", 327167434, 9833520),
 ];
 
-const ViewUsers = () => {
+const TheaterProfile = () => {
   const [details, setDetails] = useState({
-    fname: "",
-    lname: "",
-    gender: "",
     email: "",
-    type: "",
+    password: "",
+    theatrename: "",
+    location: "",
+    capacity: "",
+    type:""
   });
-
   const history = useHistory();
-
   const classes = useStyles();
+  
+  const setValue = (e) =>
+  setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
+  const [currency, setCurrency] = useState("");
+
+  useEffect(async () => {
+  const docRef = doc(db, "users", "Ag9Pyp6uVsU40yHzdwpWdDDb3p33");
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    const userData = { ...data };
+    setDetails({ ...userData });
+  
+    setCurrency(docSnap.data().email);
+  } else {
+    // doc.data() will be undefined in this case
+
+    console.log("No such document!");
+  }
+}, []);
+ 
   const bull = <span className={classes.bullet}>•</span>;
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -173,7 +203,7 @@ const ViewUsers = () => {
           variant="h5"
           style={{ marginBottom: "20px" }}
         >
-          User Profile
+          Theater Profile
         </Typography>
         <div style={{ marginBottom: "40px" }}>
           <br />
@@ -183,26 +213,16 @@ const ViewUsers = () => {
               <Typography
                 variant="h5"
                 component="h2"
-                style={{ textAlign: "center" }}
+                style={{ textAlign: "left" }}
               >
-                User Name
+        
+            <p><strong>Theater Name:</strong> {details.theatrename}</p>
+            <p><strong>Email:</strong> {details.email}</p>
+            <p><strong>Password:</strong>  {details.password}</p>
+            <p><strong>Location:</strong>  {details.location}</p>
+            <p><strong>Capacity: </strong> {details.capacity}</p>
               </Typography>
-              <hr />
-
-              <Typography
-                variant="body2"
-                component="p"
-                style={{ fontSize: "18px" }}
-              >
-                <br />
-                <blockquote>
-                  <ul>
-                    <li>User Name</li>
-                    <li>Gender</li>
-                    <li>Email</li>
-                  </ul>
-                </blockquote>
-              </Typography>
+              
             </CardContent>
             <CardActions></CardActions>
           </Card>
@@ -211,4 +231,4 @@ const ViewUsers = () => {
     </Container>
   );
 };
-export default ViewUsers;
+export default TheaterProfile;

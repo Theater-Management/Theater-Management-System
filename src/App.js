@@ -7,6 +7,18 @@ import BookingList from "./MovieBooking/BookingList";
 import Footer from "./OtherPages/Footer";
 import NavBar from "./OtherPages/NavBar";
 
+import ScreenSignUp from "./admin/ScreenSignUp";
+import ScreenView from "./Screen/ScreenView";
+import SignUp from "./Sign Up/SignUp";
+
+import AddMovie from "./Movie/AddMovie";
+import UserList from "./admin/UserList";
+import ScreenEdit from "./Screen/ScreenEdit";
+import TheaterProfile from "./admin/TheaterProfile";
+
+import ScreenSignUp from "./admin/screenSignUp";
+
+
 import EditTheatre from "./Theatre/EditTheatre"
 
 import MovieListToEdit from "./admin/MovieListToEdit";
@@ -25,6 +37,7 @@ import ScreenAddSeat from "./ScreenOwner/ScreenAddSeat";
 import ScreenSeat from "./ScreenOwner/ScreenSeat";
 
 import TheatreHome from "./theatreHome/ThreatreHome";
+
 
 import AddMovie from "./Movie/AddMovie";
 import UserList from "./admin/UserList";
@@ -84,15 +97,26 @@ const App = () => {
         <Route exact path="/user-list">
           <UserList />
         </Route>
+
+       
+
         <Route exact path="/view/:id">
           <ViewUsers />
         </Route>
+
         <Route exact path="/screen-list">
           <ScreenView />
         </Route>
         <Route exact path="/edit-booking">
           <EditBooking />
         </Route>
+
+        <Route exact path="/edit-screen">
+          <ScreenEdit />
+        </Route>
+        <Route exact path="/theater-profile">
+          <TheaterProfile />
+
         <Route exact path="/edit-theatre">
           <EditTheatre />
           </Route>
@@ -110,6 +134,7 @@ const App = () => {
 
         <Route exact path="/admin-home">
           <AdminHome />
+
         </Route>
       </Switch>
       <Footer />
