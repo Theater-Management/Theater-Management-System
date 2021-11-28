@@ -98,21 +98,7 @@ const ScreenSeat = () => {
 
   const classes = useStyles();
 
-  const deleteSeat = async (seatid) => {
-    const docSnap = await getDoc(doc(db, "seat", seatid));
-    if (docSnap.exists()) {
-      const bs = docSnap.data();
-      const bsd = { ...bs };
-      console.log("seat id", bsd.seatid);
-      
 
-      deleteDoc(doc(db, "seat", seatid));
-      loadSeats();
-      //=========================
-    } else {
-      console.log("No such document!");
-    }
-  };
 
   return (
     <Container style={{ height: "100vh", marginTop: 10 }} maxWidth="md">
@@ -139,16 +125,7 @@ const ScreenSeat = () => {
                 <TableCell align="center">{row.seatid}</TableCell>
                 <TableCell align="center">{row.status}</TableCell>
                 <TableCell align="center">
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={() => {
-                      deleteSeat(row.seatid);
-                      console.log(row.seatid);
-                    }}
-                  >
-                    Delete
-                  </Button>
+                 
                 </TableCell>
               </TableRow>
             ))}
