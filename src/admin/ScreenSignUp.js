@@ -3,7 +3,11 @@ import { useHistory } from "react-router";
 
 //firebase
 import { auth, db } from "../firebase/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc ,getDocs, getFirestore,
+  collection,
+  query,
+  where
+ } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 //mui
@@ -42,44 +46,67 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function createTheatreData(tid, tname) {
+  return { tid, tname };
+}
+
+
 const ScreenSignUp = () => {
   const history = useHistory();
   const classes = useStyles();
 
+  const [theatres, setTheatres] = useState([]);
+  const [mrows, setMRows] = useState([]);
+
+
   const [details, setDetails] = useState({
-    fname: "",
-    lname: "",
-    
     email: "",
     password: "",
     screentype: "",
+    noOfSeats:"",
+    theatre:"",
     type:"",
   });
 
+  useEffect(async () => {
+    console.log("theatre:- ");
+    setTheatres([]);
+    getDocs(
+      query(collection(db, "users"), where("type", "==", "theatre"))
+    ).then((query) => {
+      query.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        theatres.push(createTheatreData(doc.data().tid, doc.data().tname));
+      });
+      setMRows(theatres);
+      //console.log(theatres[0].tid + " "+ theatres.length);
+    });
+   
+  }, []);
+
+
   const setValue = (e) =>
     setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
+    
 
   const handleSubmit = () => {
+    history.push("user-list");
    
-
-    
-    //===============================
     createUserWithEmailAndPassword(auth, details.email, details.password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+        console.log(details);
 
         setDoc(doc(db, "users", user.uid), {
           uid: user.uid,
-          fname: details.fname,
-          lname: details.lname,
           email: details.email,
           password: details.password,
           screentype:details.screentype,
-          screensize:details.screensize,
+          theatre:details.theatre,
+          noOfSeats:details.noOfSeats,
           type: "screen"
         });
-
        
       })
       .catch((error) => {
@@ -102,34 +129,7 @@ const ScreenSignUp = () => {
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="fname"
-                variant="outlined"
-                required
-                fullWidth
-                id="fname"
-                label="First Name"
-                value={details.fname}
-                autoFocus
-                onChange={setValue}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lname"
-                label="Last Name"
-                name="lname"
-                autoComplete="lname"
-                value={details.lname}
-                onChange={setValue}
-              />
-            </Grid>
-
+      
           
 
             <Grid item xs={12}>
@@ -174,16 +174,35 @@ const ScreenSignUp = () => {
               />
             </Grid>
             <Grid item xs={12}>
+              <Select
+                variant="outlined"
+                required
+                fullWidth
+                value={details.theatre}
+                name="theater"
+                id="tid"
+                onChange={setValue}
+              >
+                {mrows.map((theatre) => (
+                    <option key={theatre.tid} value={theatre.tid}>
+                      {theatre.tname}
+                    </option>
+                  ))}
+
+              </Select>
+            </Grid>
+           
+            <Grid item xs={12}>
               <TextField
                 variant="outlined"
                 required
                 fullWidth
-                name="screensize"
-                label="screensize"
-                type="screensize"
-                id="screensize"
-                value={details.screensize}
-                autoComplete="screensize"
+                name="noOfSeats"
+                label="noOfSeats"
+                type="noOfSeats"
+                id="noOfSeats"
+                value={details.noOfSeats}
+                autoComplete="noOfSeats"
                 onChange={setValue}
               />
             </Grid>
