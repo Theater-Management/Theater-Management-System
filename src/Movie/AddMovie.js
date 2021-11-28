@@ -171,7 +171,7 @@ const AddMovie = () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                autoComplete="mname"
+                autoComplete="off"
                 name="mname"
                 variant="outlined"
                 color={classes.success}
@@ -193,7 +193,7 @@ const AddMovie = () => {
                 id="url"
                 label="URL"
                 name="url"
-                autoComplete="url"
+                autoComplete="off"
                 value={details.url}
                 onChange={setValue}
               />
@@ -251,7 +251,7 @@ const AddMovie = () => {
                 id="director"
                 label="Deriected By"
                 name="director"
-                autoComplete="director"
+                autoComplete="off"
                 value={details.director}
                 onChange={setValue}
               />
@@ -265,7 +265,7 @@ const AddMovie = () => {
                 id="cast"
                 label="Cast"
                 name="cast"
-                autoComplete="cast"
+                autoComplete="off"
                 value={details.cast}
                 onChange={setValue}
               />
@@ -278,7 +278,7 @@ const AddMovie = () => {
                 id="description"
                 label="Description"
                 name="description"
-                autoComplete="description"
+                autoComplete="off"
                 value={details.description}
                 onChange={setValue}
               />
