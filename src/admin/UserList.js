@@ -132,6 +132,12 @@ const UserList = () => {
           // const email = doc.data().email.toLowerCase(); ---- issue
           const email = doc.data().email;
 
+
+          
+          //const email = doc.data().email.toLowerCase();
+        
+
+
           const toTitleCase = (phrase) => {
             return phrase
               .toLowerCase()
