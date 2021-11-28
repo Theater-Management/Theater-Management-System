@@ -34,7 +34,7 @@ import EditMovie from "./Movie/EditMovie";
 
 import ScreenAddSeat from "./ScreenOwner/ScreenAddSeat";
 import ScreenSeat from "./ScreenOwner/ScreenSeat";
-import TheatreHome from "./theatreHome/ThreatreHome";
+import ThreatreHome from "./theatreHome/ThreatreHome";
 import AddMovie from "./Movie/AddMovie";
 
 
@@ -62,7 +62,7 @@ const App = () => {
         </Route>
 
         <Route exact path="/theatrehome">
-          <TheatreHome />
+          <ThreatreHome />
         </Route>
 
         <Route exact path="/theatresignup">
@@ -116,11 +116,7 @@ const App = () => {
         </Route>
         <Route exact path="/theater-profile">
           <TheaterProfile />
-<<<<<<< HEAD
 </Route>
-=======
-        </Route>
->>>>>>> 8de561c2fb88efdc3fc6c7c7d7cebd75f7418c18
         <Route exact path="/edit-theatre">
           <EditTheatre />
         </Route>
