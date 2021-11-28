@@ -64,7 +64,7 @@ const columns = [
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "dascription",
+    id: "description",
     label: "Description",
     minWidth: 300,
     align: "left",
