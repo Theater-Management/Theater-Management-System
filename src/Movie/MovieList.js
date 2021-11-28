@@ -64,9 +64,9 @@ const columns = [
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "datetime",
-    label: "Date-time",
-    minWidth: 200,
+    id: "dascription",
+    label: "Description",
+    minWidth: 300,
     align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
@@ -84,16 +84,11 @@ const columns = [
     align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
-  {
-    id: "action",
-    label: "Action",
-    minWidth: 250,
-    align: "center",
-  },
+
 ];
 
-function createData(mname, datetime, director, url, action) {
-  return { mname, datetime, director, url, action };
+function createData(mname, description, director, url) {
+  return { mname, description, director, url};
 }
 
 const MovieList = () => {
@@ -115,19 +110,9 @@ const MovieList = () => {
         array.push(
           createData(
             doc.data().mname,
-            doc.data().time,
+            doc.data().description,
             doc.data().director,
             doc.data().url,
-            <span>
-              <Tooltip title="Book" placement="top">
-                <a href="/book">
-                  <IconButton color="primary" aria-label="add to shopping cart">
-                    <AddShoppingCartIcon />
-                  </IconButton>
-                </a>
-              </Tooltip>{" "}
-              &nbsp;
-            </span>
           )
         );
       });
