@@ -111,7 +111,7 @@ const EditTheatre = () => {
     setTimeout(() => {
         console.log('Hello, World!')
       }, 1000);
-      history.push("theatrehome");
+      history.push("theater-profile");
   };
 
   return (
@@ -184,6 +184,8 @@ const EditTheatre = () => {
               </Grid>
             </Tooltip>
           </Grid>
+          <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
           <Button
             fullWidth
             variant="contained"
@@ -193,6 +195,20 @@ const EditTheatre = () => {
           >
             Update
           </Button>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+          <Button
+            fullWidth
+            variant="contained"
+            className={classes.submit}
+            style={{backgroundColor:'red', color:'white'}}
+            onClick={()=> history.push("./theater-profile")}
+          >
+            Cancel
+          </Button>
+          </Grid>
+          </Grid>
+          
           <Snackbar
             anchorOrigin={{
               vertical: "bottom",
