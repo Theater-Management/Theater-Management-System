@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+
 //firebase
 import { auth, db } from "../firebase/firebase";
 import { doc, setDoc } from "firebase/firestore";
@@ -27,7 +29,6 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { signInWithEmailAndPassword } from "@firebase/auth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
 
 const HomePage = () => {
   const history = useHistory();
+  const [user, setUser] = useState("");
 
   const [details, setDetails] = useState({
     email: "",
@@ -81,17 +83,17 @@ const HomePage = () => {
         // Signed in
         //----------------------------------------------------------------
         const user = userCredential.user;
-        console.log(user.uid);
+        console.log(user);
         getDoc(doc(db, "users", user.uid)).then((doc) => {
           switch (doc.data().type) {
             case "viewer":
               history.push("/movie-list");
               break;
-            case "theater":
-              history.push("/theater");
+            case "theatre":
+              history.push("/theatrehome");
               break;
             case "screen":
-              history.push("/screen");
+              history.push("/screens");
               break;
             case "admin":
               history.push("/admin-home");
@@ -123,6 +125,18 @@ const HomePage = () => {
   };
 
   //=============================
+  const authListner = () => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser("");
+      }
+    });
+  };
+  useEffect(() => {
+    authListner();
+  }, []);
 
   const classes = useStyles();
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import {
   doc,
+  addDoc,
   setDoc,
   collection,
   query,
@@ -22,10 +23,9 @@ import Container from "@material-ui/core/Container";
 import Select from "@material-ui/core/Select";
 import { FormControl, InputLabel } from "@material-ui/core";
 import MovieFilterIcon from "@material-ui/icons/MovieFilter";
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Link from "@material-ui/core/Link";
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -56,8 +56,8 @@ const useStyles = makeStyles((theme) => ({
 function createTheatreData(tid, tname) {
   return { tid, tname };
 }
-function createScreenData(sid, screenType) {
-  return { sid, screenType };
+function createScreenData(sid, screentype) {
+  return { sid, screentype };
 }
 
 const AddMovie = () => {
@@ -72,12 +72,11 @@ const AddMovie = () => {
     mid: "",
     mname: "",
     url: "",
-    time: "",
     director: "",
     cast: "",
     description: "",
-    theatre: "",
-    screen: "",
+    tid: "",
+    sid: "",
   });
 
   useEffect(async () => {
@@ -91,36 +90,36 @@ const AddMovie = () => {
         theatres.push(createTheatreData(doc.data().tid, doc.data().tname));
       });
       setMRows(theatres);
-      console.log(theatres.tid + " "+ theatres.length);
+      //console.log(theatres.tid + " "+ theatres.length);
     });
     setScreens([]);
     console.log("Screen:- ");
-    getDocs(query(collection(db, "users"), where("theatre", "==", details.theatre , "&&","type", "==", "screen"))).then(
+    getDocs(query(collection(db, "users"), where("tid", "==", details.tid , "&&","type", "==", "screen"))).then(
       (query) => {
         query.forEach((docS) => {
           console.log(docS.id, " => ", docS.data());
           screens.push(
-            createScreenData(docS.data().sid, docS.data().screenType)
+            createScreenData(docS.data().sid, docS.data().screentype)
           );
         });
         setRows(screens);
         //console.log(theatres[0].tid + " "+ theatres.length);
       }
     );
+
   }, [details]);
-  
+
   const setValue = (e) =>
     setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
   const handleReset = () => {
     setDetails(() => ({
-      mname: "",
-      url: "",
-      time: "",
-      director: "",
-      cast: "",
-      description: "",
-      theatre: "",
-      screen: "",
+    mname: "",
+    url: "",
+    director: "",
+    cast: "",
+    description: "",
+    tid: "",
+    sid: "",
     }));
   };
 
@@ -130,30 +129,32 @@ const AddMovie = () => {
     console.log(details);
 
 
-    setDoc(doc(db, "Movie", doc().id), {
-      mid: details.mid,
+    const moviedocRef = doc(collection(db, "Movie"));
+
+    setDoc(moviedocRef, {
+      mid: moviedocRef.id,
       mname: details.mname,
+      url: details.url,
       director: details.director,
       cast: details.cast,
       description: details.description,
-      theatre: details.theatre,
-      screen: details.screen,
+      tid: details.tid,   //theatreId
+      sid: details.sid,   //ScreenId
     });
- 
+    //console.log("created: " + details);
     setOpen(true);
-    console.log("created: " + details);
   };
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
     setOpen(false);
     setTimeout(() => {
-        console.log('Hello, World!')
-      }, 2000);
-      history.push("movie-list");
+      console.log("Hello, World!");
+    }, 2000);
+    history.push("movieeditlist");
   };
 
   return (
@@ -168,9 +169,9 @@ const AddMovie = () => {
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
-                autoComplete="mname"
+                autoComplete="off"
                 name="mname"
                 variant="outlined"
                 color={classes.success}
@@ -183,26 +184,6 @@ const AddMovie = () => {
                 onChange={setValue}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                id="time"
-                label="time"
-                name="time"
-                fullWidth
-                type="time"
-                defaultValue="10:30 AM"
-                className={classes.textField}
-                value={details.time}
-                onChange={setValue}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{
-                  step: 1800, // 5 min
-                }}
-              />
-            </Grid>
 
             <Grid item xs={12}>
               <TextField
@@ -212,7 +193,7 @@ const AddMovie = () => {
                 id="url"
                 label="URL"
                 name="url"
-                autoComplete="url"
+                autoComplete="off"
                 value={details.url}
                 onChange={setValue}
               />
@@ -226,9 +207,9 @@ const AddMovie = () => {
                   id="standard-select-movie-native"
                   select
                   fullWidth
-                  name="theatre"
+                  name="tid"
                   label="Theatre"
-                  value={details.theatre}
+                  value={details.tid}
                   onChange={setValue}
                 >
                   {mrows.map((theatre) => (
@@ -248,20 +229,19 @@ const AddMovie = () => {
                   variant="outlined"
                   required
                   label="Screen"
-                  value={details.screen}
-                  name="screen"
-                  id="screen"
+                  value={details.sid}
+                  name="sid"
+                  id="sid"
                   onChange={setValue}
                 >
                   {rows.map((screen) => (
                     <option key={screen.sid} value={screen.sid}>
-                      {screen.screenType}
+                      {screen.screentype}
                     </option>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
-            
 
             <Grid item xs={12}>
               <TextField
@@ -271,7 +251,7 @@ const AddMovie = () => {
                 id="director"
                 label="Deriected By"
                 name="director"
-                autoComplete="director"
+                autoComplete="off"
                 value={details.director}
                 onChange={setValue}
               />
@@ -285,7 +265,7 @@ const AddMovie = () => {
                 id="cast"
                 label="Cast"
                 name="cast"
-                autoComplete="cast"
+                autoComplete="off"
                 value={details.cast}
                 onChange={setValue}
               />
@@ -298,7 +278,7 @@ const AddMovie = () => {
                 id="description"
                 label="Description"
                 name="description"
-                autoComplete="description"
+                autoComplete="off"
                 value={details.description}
                 onChange={setValue}
               />
@@ -331,27 +311,27 @@ const AddMovie = () => {
                 Clear
               </Button>
               <Snackbar
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            open={open}
-            autoHideDuration={6000}
-            onClose={handleClose}
-            message="New Movie Added Succefully!"
-            action={
-              <React.Fragment>
-                <IconButton
-                  size="small"
-                  aria-label="close"
-                  color="inherit"
-                  onClick={handleClose}
-                >
-                  <CloseIcon fontSize="small" />
-                </IconButton>
-              </React.Fragment>
-            }
-          />
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                message="New Movie Added Succefully!"
+                action={
+                  <React.Fragment>
+                    <IconButton
+                      size="small"
+                      aria-label="close"
+                      color="inherit"
+                      onClick={handleClose}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </React.Fragment>
+                }
+              />
             </Grid>
           </Grid>
         </form>
