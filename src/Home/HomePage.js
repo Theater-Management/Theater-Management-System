@@ -81,17 +81,17 @@ const HomePage = () => {
         // Signed in
         //----------------------------------------------------------------
         const user = userCredential.user;
-        console.log(user.uid);
+        console.log(user);
         getDoc(doc(db, "users", user.uid)).then((doc) => {
           switch (doc.data().type) {
             case "viewer":
               history.push("/movie-list");
               break;
-            case "theater":
-              history.push("/theater");
+            case "theatre":
+              history.push("/theatrehome");
               break;
             case "screen":
-              history.push("/screen");
+              history.push("/screens");
               break;
             case "admin":
               history.push("/admin-home");
