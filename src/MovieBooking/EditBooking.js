@@ -70,6 +70,8 @@ const EditBooking = () => {
   const [screen, setScreen] = useState("");
 
   const [movieName, setmovieName] = useState("");
+  const [theatreName, setTheaterName] = useState("");
+  const [screenType, setScreenType] = useState("");
 
   const [prevseatid, setPrevSeatId] = useState("");
 
@@ -80,13 +82,22 @@ const EditBooking = () => {
     if (docSnap.exists()) {
       const data = docSnap.data();
       const userData = { ...data };
-      console.log(userData);
+      console.log("udat", userData);
       setDetails({ ...userData });
-      getMovieName(userData.mid);
+      getScreenType(userData.sid);
+      setmovieName(location.state.row.movie);
 
       setPrevSeatId(userData.seatid);
       //=====================================
-
+      console.log("location details", location.state.row);
+      const docSnap2 = await getDoc(doc(db, "users", userData.tid));
+      if (docSnap.exists()) {
+        const tdata = docSnap2.data();
+        const TData = { ...tdata };
+        console.log("therater data", TData);
+        setTheaterName(TData.tname);
+      }
+      //====================================
       getDocs(
         query(collection(db, "seat"), where("sid", "==", userData.sid))
       ).then((query) => {
@@ -108,13 +119,13 @@ const EditBooking = () => {
     }
   }, []);
 
-  const getMovieName = async (mid) => {
-    const docSnap = await getDoc(doc(db, "Movie", mid));
+  const getScreenType = async (sid) => {
+    const docSnap = await getDoc(doc(db, "users", sid));
     if (docSnap.exists()) {
-      const movie = docSnap.data();
-      const movieData = { ...movie };
-      console.log(movieData);
-      setmovieName(docSnap.data().mname);
+      const screen = docSnap.data();
+      const screenData = { ...screen };
+      console.log("screen data ", screenData);
+      setScreenType(docSnap.data().screenType);
     } else {
       console.log("No such document!");
     }
@@ -131,6 +142,7 @@ const EditBooking = () => {
     updateDoc(doc(db, "seat", prevseatid), {
       status: "available",
     });
+    history.push("/view-bookings");
   };
 
   return (
@@ -160,8 +172,8 @@ const EditBooking = () => {
                 fullWidth
                 label="Movie Id"
                 value={movieName}
-                SelectProps={{
-                  native: true,
+                InputProps={{
+                  readOnly: true,
                 }}
               />
             </Grid>
@@ -170,7 +182,7 @@ const EditBooking = () => {
                 id="standard-select-theater-native"
                 fullWidth
                 label="Theater Id"
-                value={details.tid}
+                value={theatreName}
                 InputProps={{
                   readOnly: true,
                 }}
@@ -182,7 +194,7 @@ const EditBooking = () => {
                 id="standard-select-screen-native"
                 fullWidth
                 label="screen Id"
-                value={details.sid}
+                value={screenType}
                 InputProps={{
                   readOnly: true,
                 }}
