@@ -31,17 +31,22 @@ import AddBooking from "./MovieBooking/AddBooking";
 import EditMovie from "./Movie/EditMovie";
 
 import ScreenSignUp from "./admin/ScreenSignUp";
+<<<<<<< HEAD
+=======
 
+>>>>>>> 719407aa4b317f66704f93820aae16b0164621bf
 import ScreenAddSeat from "./ScreenOwner/ScreenAddSeat";
 import ScreenSeat from "./ScreenOwner/ScreenSeat";
-
 import TheatreHome from "./theatreHome/ThreatreHome";
+<<<<<<< HEAD
+=======
 
 =======
 import ScreenAddSeat from "./ScreenOwner/ScreenAddSeat";
 import ScreenSeat from "./ScreenOwner/ScreenSeat";
 import TheatreHome from "./theatreHome/ThreatreHome";
 
+>>>>>>> 719407aa4b317f66704f93820aae16b0164621bf
 import AddMovie from "./Movie/AddMovie";
 import UserList from "./admin/UserList";
 
@@ -127,17 +132,26 @@ const App = () => {
         </Route>
         <Route exact path="/theater-profile">
           <TheaterProfile />
+<<<<<<< HEAD
+</Route>
+=======
         </Route>
+>>>>>>> 719407aa4b317f66704f93820aae16b0164621bf
         <Route exact path="/edit-theatre">
           <EditTheatre />
         </Route>
         <Route exact path="/edit-users">
           <EditUsers />
+<<<<<<< HEAD
+</Route>
+        
+=======
 
 
 </Route>
         
 
+>>>>>>> 719407aa4b317f66704f93820aae16b0164621bf
 
         <Route exact path="/view-bookings">
           <BookingList />
