@@ -116,7 +116,7 @@ const App = () => {
         </Route>
         <Route exact path="/theater-profile">
           <TheaterProfile />
-
+</Route>
         <Route exact path="/edit-theatre">
           <EditTheatre />
           </Route>
