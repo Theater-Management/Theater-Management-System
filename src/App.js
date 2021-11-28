@@ -16,12 +16,12 @@ import TheatreSignUp from "./admin/TheatreSignUp";
 import AddBooking from "./MovieBooking/AddBooking";
 import EditMovie from "./Movie/EditMovie";
 import ScreenSignUp from "./admin/ScreenSignUp";
-<<<<<<< HEAD
+
 import ScreenAddSeat from "./ScreenOwner/ScreenAddSeat";
 import ScreenSeat from "./ScreenOwner/ScreenSeat";
-=======
+
 import TheatreHome from "./theatreHome/ThreatreHome";
->>>>>>> 4d7de1fb9228c3099f11801c46e0d540bb9c38a0
+
 import AddMovie from "./Movie/AddMovie";
 import UserList from "./admin/UserList";
 import EditUsers from "./admin/EditUsers";
@@ -92,12 +92,8 @@ const App = () => {
 
         <Route exact path="/edit-users">
           <EditUsers />
-<<<<<<< HEAD
-</Route>
-=======
-        </Route>
 
->>>>>>> 4d7de1fb9228c3099f11801c46e0d540bb9c38a0
+</Route>
         <Route exact path="/view-bookings">
           <BookingList />
         </Route>
