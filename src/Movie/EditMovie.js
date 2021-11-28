@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 
 //mui
+import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -89,6 +90,7 @@ const EditMovie = () => {
     updateDoc(doc(db, "Movie", details.mid), {
       ...details,
     });
+    history.push("movieeditlist");
   };
 
   return (
@@ -126,6 +128,7 @@ const EditMovie = () => {
             <Grid item xs={12}>
               <TextField
                 id="mname"
+                name="mname"
                 fullWidth
                 label="Movie Name"
                 value={details.mname}
@@ -138,29 +141,35 @@ const EditMovie = () => {
             <Grid item xs={12}>
               <TextField
                 id="cast"
+                name="cast"
                 fullWidth
                 label="Movie Cast"
                 value={details.cast}
-                
+                onChange={setValue}
               ></TextField>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
+            <Grid item xs={12} container zeroMinWidth>
+              <label>Movie Description</label>
+              <TextareaAutosize
+                maxRows={8}
+                style={{ width: 10000,height:100,FontFace:"Arial" }}
                 id="description"
+                name="description"
                 fullWidth
                 fullHieght
                 label="Movie Description"
                 value={details.description}
-                
-              ></TextField>
+                onChange={setValue}
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                id="standard-select-screen-native"
+                id="director"
+                name="director"
                 fullWidth
                 label="Movie Directors"
                 value={details.director}
-                
+                onChange={setValue}
               ></TextField>
             </Grid>
             

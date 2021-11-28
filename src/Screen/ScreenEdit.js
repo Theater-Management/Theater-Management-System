@@ -1,11 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import { AuthContext } from "../firebase/AuthContext";
 
 //firebase
 import { auth, db } from "../firebase/firebase";
-import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 //mui
 import Avatar from "@material-ui/core/Avatar";
@@ -22,6 +29,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Select from "@material-ui/core/Select";
 import { FormControl, InputLabel } from "@material-ui/core";
+import { Details } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -43,102 +51,120 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AdminProfileEdit = () => {
+
+const ScreenEdit = () => {
   const history = useHistory();
-  const user = useContext(AuthContext);
   const classes = useStyles();
 
+
   const [details, setDetails] = useState({
-    fname: "",
-    lname: "",
+
     email: "",
     password: "",
-    type: "",
-    uid: "",
+    screentype: "",
+    noOfSeats:"",
+    theatre:"",
   });
+
+
 
   const setValue = (e) =>
     setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
+  const [currency, setCurrency] = useState("");
 
   useEffect(async () => {
-    const docSnap = await getDoc(doc(db, "users", user.user.userDetails.uid));
-    console.log("details of admin ", user.user.userDetails);
+    const docRef = doc(db, "users", "yy05taYUhCOFWx0Ii4PNaJ8I7Cp2");
+    const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      const udata = docSnap.data();
-      const userData = { ...udata };
-      console.log("booking seat id", userData);
+      const data = docSnap.data();
+      const userData = { ...data };
       setDetails({ ...userData });
-      console.log(details);
+      setCurrency(docSnap.data().email);
     } else {
+      // doc.data() will be undefined in this case
+
       console.log("No such document!");
     }
   }, []);
+
+  const editdetails = () => {
+    console.log(details);
+    history.push("user-list");
+    updateDoc(doc(db, "users", "yy05taYUhCOFWx0Ii4PNaJ8I7Cp2"), {
+        ...details
+      });
+  };
 
   return (
     <Container style={{ height: "100vh" }} maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
-          Edit Admin Profile
+          Edit Screen
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
-                autoComplete="fname"
-                name="fname"
-                variant="outlined"
-                required
+                id="standard-read-only-input"
+                label="Email"
+                value={details.email}
                 fullWidth
-                id="fname"
-                label="First Name"
-                value={details.fname}
-                autoFocus
-                onChange={setValue}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lname"
-                label="Last Name"
-                name="lname"
-                autoComplete="lname"
-                value={details.lname}
-                onChange={setValue}
+                InputProps={{
+                  readOnly: true,
+                }}
               />
             </Grid>
 
             <Grid item xs={12}>
               <TextField
-                variant="outlined"
-                required
+                id="standard-read-only-input"
+                label="password"
+                value={details.password}
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                disabled
-                value={details.email}
-                autoComplete="email"
-                onChange={setValue}
+                InputProps={{
+                  readOnly: true,
+                }}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                disabled
-                value={details.password}
-                autoComplete="current-password"
-                onChange={setValue}
+                 required
+                 fullWidth
+                 name="screentype"
+                 label="screentype"
+                 type="screentype"
+                 id="screentype"
+                 value={details.screentype}
+                 autoComplete="screentype"
+                 onChange={setValue}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                id="standard-read-only-input"
+                fullWidth
+                label="theater"
+                value={details.theatre}
+                InputProps={{
+                    readOnly: true,
+                  }}
+              />
+                
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                 required
+                 fullWidth
+                 name="noOfSeats"
+                 label="noOfSeats"
+                 type="noOfSeats"
+                 id="noOfSeats"
+                 value={details.noOfSeats}
+                 autoComplete="noOfSeats"
+                 onChange={setValue}
+              > 
+              </TextField>
             </Grid>
           </Grid>
           <Button
@@ -146,17 +172,13 @@ const AdminProfileEdit = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={() => {
-              updateDoc(doc(db, "users", details.uid), {
-                ...details,
-              });
-            }}
+            onClick={editdetails}
           >
-            Edit
+            Edit Screen
           </Button>
         </form>
       </div>
     </Container>
   );
 };
-export default AdminProfileEdit;
+export default ScreenEdit;
