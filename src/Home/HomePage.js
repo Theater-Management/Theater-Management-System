@@ -94,7 +94,7 @@ const HomePage = () => {
               history.push("/screen");
               break;
             case "admin":
-              history.push("/admin-panel");
+              history.push("/admin-home");
               break;
             default:
               history.push("/");

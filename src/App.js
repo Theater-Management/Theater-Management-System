@@ -21,6 +21,7 @@ import UserList from "./admin/UserList";
 import EditUsers from "./admin/EditUsers";
 import ViewUsers from "./admin/ViewUsers";
 import AdminProfileEdit from "./admin/AdminProfileEdit";
+import AdminHome from "./admin/AdminHome";
 
 const App = () => {
   return (
@@ -78,6 +79,10 @@ const App = () => {
         </Route>
         <Route exact path="/edit-admin">
           <AdminProfileEdit />
+        </Route>
+
+        <Route exact path="/admin-home">
+          <AdminHome />
         </Route>
       </Switch>
       <Footer />
