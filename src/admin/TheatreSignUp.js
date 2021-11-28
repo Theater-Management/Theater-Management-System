@@ -186,5 +186,9 @@ const TheatreSignUp = () => {
   );
 };
 
+
+ 
+=======
 export default TheatreSignUp;
+
 
