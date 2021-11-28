@@ -53,17 +53,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AdminHome = () => {
+const ScreenHome = () => {
   const history = useHistory();
   const user = useContext(AuthContext);
 
   const [details, setDetails] = useState({
-    fname: "",
-    lname: "",
     email: "",
-    password: "",
-    type: "",
-    uid: "",
+    noOfSeats: "",
+    screentype: "",
+    theatre: "",
   });
   const classes = useStyles();
   useEffect(async () => {
@@ -93,19 +91,19 @@ const AdminHome = () => {
         <CssBaseline />
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
-            Admin Profile
+            Screen Profile
           </Typography>
           <form className={classes.form} noValidate>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  autoComplete="fname"
-                  name="fname"
+                  autoComplete="email"
+                  name="email"
                   required
                   fullWidth
-                  id="fname"
-                  label="First Name"
-                  value={details.fname}
+                  id="email"
+                  label="Email Address"
+                  value={details.email}
                   autoFocus
                   InputProps={{
                     readOnly: true,
@@ -116,11 +114,11 @@ const AdminHome = () => {
                 <TextField
                   required
                   fullWidth
-                  id="lname"
+                  id="noOfSeats"
                   label="Last Name"
-                  name="lname"
-                  autoComplete="lname"
-                  value={details.lname}
+                  name="noOfSeats"
+                  autoComplete="noOfSeats"
+                  value={details.noOfSeats}
                   InputProps={{
                     readOnly: true,
                   }}
@@ -131,29 +129,29 @@ const AdminHome = () => {
                 <TextField
                   required
                   fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
+                  id="screentype"
+                  label="screentype Address"
+                  name="screentype"
                   InputProps={{
                     readOnly: true,
                   }}
-                  value={details.email}
-                  autoComplete="email"
+                  value={details.screentype}
+                  autoComplete="screentype"
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
+                  name="theatre"
+                  label="theatre"
+                  type="theatre"
+                  id="theatre"
                   InputProps={{
                     readOnly: true,
                   }}
-                  value={details.password}
-                  autoComplete="current-password"
+                  value={details.theatre}
+                  autoComplete="current-theatre"
                 />
               </Grid>
             </Grid>
@@ -167,25 +165,15 @@ const AdminHome = () => {
           aria-label="vertical contained primary button group"
           variant="contained"
         >
-          <Button onClick={() => history.push("/edit-admin")}>
-            Edit Profile
+          <Button onClick={() => history.push("/screenseat")}>
+            Booked Seats
           </Button>
-          <Button onClick={() => history.push("/movieeditlist")}>
-            Edit Movies
-          </Button>
-          <Button onClick={() => history.push("/screen-list")}>
-            Screen List
-          </Button>
-          {/* <Button onClick={history.push("/edit-admin")}>Theater List</Button> */}
-          <Button onClick={() => history.push("/theatresignup")}>
-            Theater Sign Up
-          </Button>
-          <Button onClick={() => history.push("/screensignup")}>
-            Screen Sign Up
+          <Button onClick={() => history.push("/screenseatbooked")}>
+            Available Seats
           </Button>
         </ButtonGroup>
       </Grid>
     </Grid>
   );
 };
-export default AdminHome;
+export default ScreenHome;

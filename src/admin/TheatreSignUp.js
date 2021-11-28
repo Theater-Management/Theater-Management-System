@@ -73,118 +73,129 @@ const TheatreSignUp = () => {
         });
 
         console.log("created");
+        history.push("/theatrehome");
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         // ..
       });
-
   };
 
- 
+  //==============================
 
-        //==============================
-        history.push("theatrehome");
-        //------------------------------------------------------
-    };
+  //------------------------------------------------------
 
-    return (
-        <Container style={{ height: "100vh" }} maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                   Theatre Sign up
-                </Typography>
-                <form className={classes.form} noValidate>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                autoComplete="theatrename"
-                                name="theatrename"
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="theatrename"
-                                label="Threatre Name"
-                                value={details.theatrename}
-                                autoFocus
-                                onChange={setValue}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="location"
-                                label="Location"
-                                name="location"
-                                autoComplete="location"
-                                value={details.location}
-                                onChange={setValue}
-                            />
-                        </Grid>
+  return (
+    <Container style={{ height: "100vh" }} maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Theatre Sign up
+        </Typography>
+        <form className={classes.form} noValidate>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                autoComplete="theatrename"
+                name="theatrename"
+                variant="outlined"
+                required
+                fullWidth
+                id="theatrename"
+                label="Threatre Name"
+                value={details.theatrename}
+                autoFocus
+                onChange={setValue}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="location"
+                label="Location"
+                name="location"
+                autoComplete="location"
+                value={details.location}
+                onChange={setValue}
+              />
+            </Grid>
 
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="capacity"
-                                label="capacity"
-                                name="capacity"
-                                autoComplete="capacity"
-                                value={details.capacity}
-                                onChange={setValue}
-                            />
-                        </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="capacity"
+                label="capacity"
+                name="capacity"
+                autoComplete="capacity"
+                value={details.capacity}
+                onChange={setValue}
+              />
+            </Grid>
 
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                value={details.email}
-                                autoComplete="email"
-                                onChange={setValue}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                value={details.password}
-                                autoComplete="current-password"
-                                onChange={setValue}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        onClick={handleSubmit}
-                    >
-                        Sign Up
-                    </Button>
-                    <Grid container justifyContent="flex-end">
-                    </Grid>
-                </form>
-            </div>
-        </Container>
-    );
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                value={details.email}
+                autoComplete="email"
+                onChange={setValue}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                value={details.password}
+                autoComplete="current-password"
+                onChange={setValue}
+              />
+            </Grid>
+          </Grid>
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={handleSubmit}
+          >
+            Sign Up
+          </Button>
+          <Grid container justifyContent="flex-end"></Grid>
+        </form>
+      </div>
+    </Container>
+  );
 };
 export default TheatreSignUp;
+
+ //   const docSnap = await getDoc(doc(db, "seat", seatid));
+  //   if (docSnap.exists()) {
+  //     const bs = docSnap.data();
+  //     const bsd = { ...bs };
+  //     console.log("seat id", bsd.seatid);
+      
+
+  //     deleteDoc(doc(db, "seat", seatid));
+  //     loadSeats();
+  //     //=========================
+  //   } else {
+  //     console.log("No such document!");
+  //   }
+  // };
