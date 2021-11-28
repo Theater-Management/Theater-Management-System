@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import {
   doc,
+  addDoc,
   setDoc,
   collection,
   query,
@@ -91,7 +92,7 @@ const AddMovie = () => {
         theatres.push(createTheatreData(doc.data().tid, doc.data().tname));
       });
       setMRows(theatres);
-      console.log(theatres.tid + " "+ theatres.length);
+      //console.log(theatres.tid + " "+ theatres.length);
     });
     setScreens([]);
     console.log("Screen:- ");
@@ -100,7 +101,7 @@ const AddMovie = () => {
         query.forEach((docS) => {
           console.log(docS.id, " => ", docS.data());
           screens.push(
-            createScreenData(docS.data().sid, docS.data().screenType)
+            createScreenData(docS.data().sid, docS.data().screentype)
           );
         });
         setRows(screens);
@@ -113,14 +114,14 @@ const AddMovie = () => {
     setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
   const handleReset = () => {
     setDetails(() => ({
-      mname: "",
-      url: "",
-      time: "",
-      director: "",
-      cast: "",
-      description: "",
-      theatre: "",
-      screen: "",
+    mname: "",
+    url: "",
+    time: "",
+    director: "",
+    cast: "",
+    description: "",
+    theatre: "",
+    screen: "",
     }));
   };
 
@@ -128,20 +129,26 @@ const AddMovie = () => {
 
   const handleSubmit = () => {
     console.log(details);
-
-
-    setDoc(doc(db, "Movie", doc().id), {
-      mid: details.mid,
+    //const id="7748j";
+    //const id = doc(db, "Movie",doc().id.toString());
+   // console.log("created Id: " + id);
+    const id = collection('Movie').doc(String(""+id));
+    addDoc(doc(db, "Movie", id
+    ), {
       mname: details.mname,
+      url: details.url,
+      time: details.time,
       director: details.director,
       cast: details.cast,
       description: details.description,
       theatre: details.theatre,
       screen: details.screen,
     });
- 
+    
+    
+    //console.log("created: " + details);
     setOpen(true);
-    console.log("created: " + details);
+  
   };
 
   const handleClose = (event, reason) => {
