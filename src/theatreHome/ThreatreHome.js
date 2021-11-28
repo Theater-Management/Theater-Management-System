@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext,useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { AuthContext } from "../firebase/AuthContext";
 //firebase
 import { auth, db } from "../firebase/firebase";
 import { doc, setDoc } from "firebase/firestore";
@@ -11,11 +12,9 @@ import {
   where,
   getDocs,
   updateDoc,
-  deleteDoc
 } from "firebase/firestore";
 
 //material Ui
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -73,28 +72,23 @@ function getModalStyle() {
   };
 }
 
-const TheatreHome = () => {
+const ThreatreHome = () => {
   const history = useHistory();
   const [rows, setRows] = useState([]);
-
+  const user = useContext(AuthContext);
+  console.log(user.user.userDetails);
   const [array, setArray] = useState([]);
-
-  const deleteUser = async(uid) => {
-    console.log("uers--> "+uid);
-    const userId = doc(db, 'users', uid);
-    await deleteDoc(userId);
-    window.location.reload(false);
-  }
-
   useEffect(() => {
     setArray([]);
     getDocs(query(collection(db, "users"), where("type", "==", "screen"))).then(
       (query) => {
         query.forEach((doc) => {
+          if (doc.data().tid == user.user.userDetails.uid) {
           console.log(doc.id, " => ", doc.data());
           array.push(
             createData(doc.data().uid, doc.data().email, doc.data().screentype)
           );
+          }
         });
         setRows(array);
         console.log(array);
@@ -150,7 +144,7 @@ const TheatreHome = () => {
   const handleClose = () => {
     setOpen(false);
   };
- 
+
   const body = (
     <div style={modalStyle} className={classes.modal}>
       <h2 id="simple-modal-title">Movie List</h2>
@@ -204,7 +198,7 @@ const TheatreHome = () => {
               <TableCell align="center">ScreenID</TableCell>
               <TableCell align="center">Email</TableCell>
               <TableCell align="center">Type</TableCell>
-
+              <TableCell align="center">Movie List</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -215,13 +209,14 @@ const TheatreHome = () => {
                 <TableCell align="center">{row.type}</TableCell>
                 <TableCell align="center">
                   <Button
-                    size="small"
-                    onClick={()=> {deleteUser(doc.id)} }
-                    style={{ color: "#00695c", backgroundColor: "#b2dfdb" }}
-                    className={classes.button}
-                    startIcon={<DeleteForeverIcon />}
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => {
+                      loadMovieList(row.screenId);
+                      setSelect(row.screenId);
+                    }}
                   >
-                    Remove
+                    Movies
                   </Button>
                 </TableCell>
               </TableRow>
@@ -240,4 +235,4 @@ const TheatreHome = () => {
     </Container>
   );
 };
-export default TheatreHome;
+export default ThreatreHome;
