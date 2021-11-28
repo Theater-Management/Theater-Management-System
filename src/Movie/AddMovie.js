@@ -1,6 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { auth, db } from "../firebase/firebase";
 
 //  material ui
@@ -15,6 +22,10 @@ import Container from "@material-ui/core/Container";
 import Select from "@material-ui/core/Select";
 import { FormControl, InputLabel } from "@material-ui/core";
 import MovieFilterIcon from "@material-ui/icons/MovieFilter";
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -24,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   formControl: {
-    minWidth: 180,
+    minWidth: 265,
   },
   success: {
     color: "#fff101",
@@ -42,12 +53,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function createTheatreData(tid, tname) {
+  return { tid, tname };
+}
+function createScreenData(sid, screenType) {
+  return { sid, screenType };
+}
+
 const AddMovie = () => {
   const history = useHistory();
   const classes = useStyles();
 
+  const [theatres, setTheatres] = useState([]);
+  const [screens, setScreens] = useState([]);
+  const [mrows, setMRows] = useState([]);
+  const [rows, setRows] = useState([]);
   const [details, setDetails] = useState({
-    mid:"",
+    mid: "",
     mname: "",
     url: "",
     time: "",
@@ -55,9 +77,38 @@ const AddMovie = () => {
     cast: "",
     description: "",
     theatre: "",
-    screen: [],
+    screen: "",
   });
 
+  useEffect(async () => {
+    console.log("theatre:- ");
+    setTheatres([]);
+    getDocs(
+      query(collection(db, "users"), where("type", "==", "theatre"))
+    ).then((query) => {
+      query.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        theatres.push(createTheatreData(doc.data().tid, doc.data().tname));
+      });
+      setMRows(theatres);
+      console.log(theatres.tid + " "+ theatres.length);
+    });
+    setScreens([]);
+    console.log("Screen:- ");
+    getDocs(query(collection(db, "users"), where("theatre", "==", details.theatre , "&&","type", "==", "screen"))).then(
+      (query) => {
+        query.forEach((docS) => {
+          console.log(docS.id, " => ", docS.data());
+          screens.push(
+            createScreenData(docS.data().sid, docS.data().screenType)
+          );
+        });
+        setRows(screens);
+        //console.log(theatres[0].tid + " "+ theatres.length);
+      }
+    );
+  }, [details]);
+  
   const setValue = (e) =>
     setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
   const handleReset = () => {
@@ -69,13 +120,17 @@ const AddMovie = () => {
       cast: "",
       description: "",
       theatre: "",
-      screen: [],
+      screen: "",
     }));
   };
+
+  const [open, setOpen] = React.useState(false);
+
   const handleSubmit = () => {
     console.log(details);
 
-    setDoc(doc(db, "Movie", "13"), {
+    /*
+   setDoc(doc(db, "Movie", "18"), {
       mid: details.mid,
       mname: details.mname,
       director: details.director,
@@ -84,11 +139,21 @@ const AddMovie = () => {
       theatre: details.theatre,
       screen: details.screen,
     });
-    history.push("movie-list");
+ */
+    setOpen(true);
+    console.log("created: " + details);
   };
 
-  const pushtoScreen = (event) => {
-    details.screen.push(event.target.value);
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+    setTimeout(() => {
+        console.log('Hello, World!')
+      }, 2000);
+      history.push("movie-list");
   };
 
   return (
@@ -121,12 +186,12 @@ const AddMovie = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
-                id="date-time"
-                label="date-time"
+                id="time"
+                label="time"
                 name="time"
                 fullWidth
-                type="datetime-local"
-                defaultValue="2017-05-24T10:30"
+                type="time"
+                defaultValue="10:30 AM"
                 className={classes.textField}
                 value={details.time}
                 onChange={setValue}
@@ -152,29 +217,29 @@ const AddMovie = () => {
                 onChange={setValue}
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel htmlFor="outlined-age-native-simple">
                   Theatre
                 </InputLabel>
                 <Select
-                  variant="outlined"
-                  required
-                  label="Theatre"
+                  id="standard-select-movie-native"
+                  select
                   fullWidth
-                  value={details.theatre}
                   name="theatre"
-                  id="theatre"
+                  label="Theatre"
+                  value={details.theatre}
                   onChange={setValue}
                 >
-                  <option aria-label="None" value="" />
-                  <option value={100}>Ereana</option>
-                  <option value={200}>Sigiri</option>
-                  <option value={300}>MaxWell</option>
+                  {mrows.map((theatre) => (
+                    <option key={theatre.tid} value={theatre.tid}>
+                      {theatre.tname}
+                    </option>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel htmlFor="outlined-age-native-simple">
                   Screen
@@ -183,39 +248,20 @@ const AddMovie = () => {
                   variant="outlined"
                   required
                   label="Screen"
-                  value={details.screen[0]}
+                  value={details.screen}
                   name="screen"
                   id="screen"
-                  onChange={pushtoScreen}
+                  onChange={setValue}
                 >
-                  <option aria-label="None" value="" />
-                  <option value={10}>Screen 1</option>
-                  <option value={20}>Screen 2</option>
-                  <option value={30}>Screen 3</option>
+                  {rows.map((screen) => (
+                    <option key={screen.sid} value={screen.sid}>
+                      {screen.screenType}
+                    </option>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel htmlFor="outlined-age-native-simple">
-                  Screen
-                </InputLabel>
-                <Select
-                  variant="outlined"
-                  required
-                  label="Screen"
-                  value={details.screen[1]}
-                  name="screen"
-                  id="screen"
-                  onChange={pushtoScreen}
-                >
-                  <option aria-label="None" value="" />
-                  <option value={10}>Screen 1</option>
-                  <option value={20}>Screen 2</option>
-                  <option value={30}>Screen 3</option>
-                </Select>
-              </FormControl>
-            </Grid>
+            
 
             <Grid item xs={12}>
               <TextField
@@ -284,6 +330,28 @@ const AddMovie = () => {
               >
                 Clear
               </Button>
+              <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            open={open}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            message="New Movie Added Succefully!"
+            action={
+              <React.Fragment>
+                <IconButton
+                  size="small"
+                  aria-label="close"
+                  color="inherit"
+                  onClick={handleClose}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </React.Fragment>
+            }
+          />
             </Grid>
           </Grid>
         </form>

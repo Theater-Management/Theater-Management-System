@@ -11,7 +11,8 @@ import {
   where,
   getDocs,
   updateDoc,
-  deleteDoc
+  deleteDoc,
+  getDoc,
 } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
@@ -38,6 +39,15 @@ import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Tooltip from "@material-ui/core/Tooltip";
 import CreateIcon from "@material-ui/icons/Create";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+import Chip from "@material-ui/core/Chip";
+import FaceIcon from "@material-ui/icons/Face";
+
+function createUserData(uid, email, gender) {
+  return { uid, email, gender };
+}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -63,9 +73,21 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  button:{ width:'90px'},
+  button: { width: "90px" },
   table: {
     minWidth: 1500,
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  mpaper: {
+    backgroundColor: theme.palette.background.paper,
+    border: "4px solid #fff000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 4),
+    width: "600px",
   },
 }));
 
@@ -104,25 +126,22 @@ const UserList = () => {
   const [active, setActive] = useState(false);
   const [array, setArray] = useState([]);
 
-  const deleteUser = async(uid) => {
-    console.log("uers--> "+uid);
-    const userId = doc(db, 'users', uid);
+  const deleteUser = async (uid) => {
+    const userId = doc(db, "users", uid);
     await deleteDoc(userId);
     window.location.reload(false);
-  }
+  };
 
   useEffect(async () => {
     setArray([]);
-    //let utype = type.toString();
+
     const utype = type.toString();
-    console.log("user: " + type);
     getDocs(query(collection(db, "users"), where("type", "==", utype))).then(
       (query) => {
         query.forEach((doc) => {
-          console.log(doc.id, " => ", doc.data());
           const uname = doc.data().fname + " " + doc.data().lname;
           //const email = doc.data().email.toLowerCase();
-          const email = doc.data().email
+          const email = doc.data().email;
           const toTitleCase = (phrase) => {
             return phrase
               .toLowerCase()
@@ -139,31 +158,23 @@ const UserList = () => {
               email,
               doc.data().gender,
               <span>
-                <Tooltip title="View" placement="top">
-                <Button
-                    size="small"
-                    onClick={() => history.push("/view")}
-                    style={{ color: "#6a1b9a", backgroundColor: "#e1bee7" }}
-                    className={classes.button}
-                    startIcon={<MoreHorizIcon />}
-                  >
-                    View
-                  </Button>
-                 
-                </Tooltip>{" "}
-                &nbsp;
-            
-                <Tooltip title="Delete" placement="right">
-                  <Button
-                    size="small"
-                    onClick={()=> {deleteUser(doc.id)} }
-                    style={{ color: "#00695c", backgroundColor: "#b2dfdb" }}
-                    className={classes.button}
-                    startIcon={<DeleteForeverIcon />}
-                  >
-                    Remove
-                  </Button>
-                </Tooltip>
+                {!active ? (
+                  <Tooltip title="Delete" placement="right">
+                    <Chip
+                      label="Remove User"
+                      onClick={() => {
+                        deleteUser(doc.id);
+                      }}
+                      style={{
+                        color: "#00695c",
+                        backgroundColor: "#b2dfdb",
+                      }}
+                      icon={<DeleteForeverIcon />}
+                    />
+                  </Tooltip>
+                ) : (
+                  <Chip icon={<FaceIcon />} label="User - Admin" />
+                )}
               </span>
             )
           );
@@ -215,8 +226,8 @@ const UserList = () => {
               color={active ? "primary" : "light"}
               onClick={() => {
                 setActive(true);
-                setType("screen");
-                console.log("screen");
+                setType("admin");
+                console.log("admin");
               }}
             >
               Admin

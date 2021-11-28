@@ -5,7 +5,7 @@ import MovieList from "./Movie/MovieList";
 import EditBooking from "./MovieBooking/EditBooking";
 import Footer from "./OtherPages/Footer";
 import NavBar from "./OtherPages/NavBar";
-
+import EditTheatre from "./Theatre/EditTheatre"
 import ScreenView from "./Screen/ScreenView";
 import SignUp from "./Sign Up/SignUp";
 import AddMovie from "./Movie/AddMovie";
@@ -33,7 +33,7 @@ const App = () => {
         <Route exact path="/user-list">
           <UserList />
         </Route>
-        <Route exact path="/view">
+        <Route exact path="/view/:id">
           <ViewUsers />
         </Route>
         <Route exact path="/screen-list">
@@ -41,7 +41,9 @@ const App = () => {
         </Route>
         <Route exact path="/edit-booking">
           <EditBooking />
-
+        </Route>
+        <Route exact path="/edit-theatre">
+          <EditTheatre />
         </Route>
       </Switch>
       <Footer />

@@ -56,6 +56,10 @@ const NavBar = () => {
           <div className={classes.grow} />
 
           <div className={classes.root}>
+          <Button
+              style={{ color: "white" }}
+              onClick={() => history.push("/edit-theatre")}
+            >Edit Theatre</Button>
             <Button style={{ color: "white" }}>Movie List</Button>
             <Button
               style={{ color: "white" }}
