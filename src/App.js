@@ -8,10 +8,18 @@ import NavBar from "./OtherPages/NavBar";
 import ScreenSignUp from "./admin/ScreenSignUp";
 import ScreenView from "./Screen/ScreenView";
 import SignUp from "./Sign Up/SignUp";
+
 import AddMovie from "./Movie/AddMovie";
 import UserList from "./admin/UserList";
 import ScreenEdit from "./Screen/ScreenEdit";
 import TheaterProfile from "./admin/TheaterProfile";
+
+import ScreenSignUp from "./admin/screenSignUp";
+
+import AddMovie from "./Movie/AddMovie";
+import UserList from "./admin/UserList";
+import ViewUsers from "./admin/ViewUsers";
+
 
 const App = () => {
   return (
