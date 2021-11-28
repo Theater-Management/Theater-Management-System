@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { AuthContext } from "../firebase/AuthContext";
 
 //firebase
 import { auth, db } from "../firebase/firebase";
-import { doc, setDoc,getDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 //mui
@@ -44,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AdminProfileEdit = () => {
   const history = useHistory();
+  const user = useContext(AuthContext);
   const classes = useStyles();
 
   const [details, setDetails] = useState({
@@ -58,25 +60,24 @@ const AdminProfileEdit = () => {
   const setValue = (e) =>
     setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
 
-  useEffect(async()=>{
-      const docSnap = await getDoc(doc(db,"users", "tEqavwQHBCeIHSr9LpEtbCGdOew2"));
-  if (docSnap.exists()) {
-    const udata = docSnap.data();
-    const userData = { ...udata };
-    console.log("booking seat id", userData);
-    setDetails({...userData})
-    console.log(details)
-  } else {
-    console.log("No such document!");
-  }},[]
-)
+  useEffect(async () => {
+    const docSnap = await getDoc(doc(db, "users", user.user.userDetails.uid));
+    console.log("details of admin ", user.user.userDetails);
+    if (docSnap.exists()) {
+      const udata = docSnap.data();
+      const userData = { ...udata };
+      console.log("booking seat id", userData);
+      setDetails({ ...userData });
+      console.log(details);
+    } else {
+      console.log("No such document!");
+    }
+  }, []);
 
-  
   return (
     <Container style={{ height: "100vh" }} maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        
         <Typography component="h1" variant="h5">
           Edit Admin Profile
         </Typography>
@@ -145,10 +146,10 @@ const AdminProfileEdit = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={()=>{
-                updateDoc(doc(db, "users", details.uid), {
-                   ...details
-                  });              
+            onClick={() => {
+              updateDoc(doc(db, "users", details.uid), {
+                ...details,
+              });
             }}
           >
             Edit

@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import { AuthContext } from "../firebase/AuthContext";
 //firebase
 import { auth, db } from "../firebase/firebase";
 import { doc, setDoc } from "firebase/firestore";
@@ -30,8 +29,8 @@ import { Button, Grid, Modal } from "@material-ui/core";
 
 import { Search } from "@material-ui/icons";
 
-function createData(bid, email, movie, seatId) {
-  return { bid, email, movie, seatId };
+function createData(seatid, status, screenType) {
+  return {seatid, status, screenType};
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -48,71 +47,55 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BookingList = () => {
+const ScreenSeat = () => {
   const history = useHistory();
-  const user = useContext(AuthContext);
-  console.log(user.user.userDetails);
   const [rows, setRows] = useState([]);
-  const [moviename, setMovieName] = useState("");
+  const [screenType, setscreentype] = useState("");
   const [array, setArray] = useState([]);
   useEffect(() => {
     setArray([]);
     getDocs(
       query(
-        collection(db, "movieBooking"),
-        where("uid", "==", user.user.userDetails.uid)
+        collection(db, "seat"),
+        where("sid", "==", "XwnGcL4e1gqWAIxnyNm5")
       )
     ).then((query) => {
       query.forEach((doc) => {
         console.log(doc.id, " => ", doc.data());
-        console.log("mid id ", doc.data().mid);
-        getMovieName(doc.data().mid);
-        array.push(
-          createData(
-            doc.data().bid,
-            doc.data().email,
-            moviename,
-            doc.data().seatid
-          )
-        );
+        console.log("screen id ", doc.data().sid);
+        getScreenType(doc.data().sid);
+        array.push(createData(doc.data().seatid, doc.data().status, screenType));
       });
       setRows(array);
       console.log(array);
     });
-  }, [moviename]);
+  }, [screenType]);
 
-  const loadBookings = () => {
+  const loadSeats = () => {
     setArray([]);
     getDocs(
       query(
-        collection(db, "movieBooking"),
-        where("uid", "==", user.user.userDetails.uid)
+        collection(db, "seat"),
+        where("sid", "==", "XwnGcL4e1gqWAIxnyNm5")
       )
     ).then((query) => {
       query.forEach((doc) => {
         //console.log(doc.id, " => ", doc.data());
-        getMovieName(doc.data().mid);
-        array.push(
-          createData(
-            doc.data().bid,
-            doc.data().email,
-            moviename,
-            doc.data().seatid
-          )
-        );
+        getScreenType(doc.data().sid);
+        array.push(createData(doc.data().seatid, doc.data().status, screenType));
       });
       setRows(array);
       console.log(array);
     });
   };
   //==========================================================
-  const getMovieName = (mid) => {
-    getDocs(query(collection(db, "Movie"), where("mid", "==", mid))).then(
+  const getScreenType = (sid) => {
+    getDocs(query(collection(db, "users"), where("uid", "==", "XwnGcL4e1gqWAIxnyNm5"))).then(
       (query) => {
         query.forEach((doc) => {
           console.log(doc.id, " => ", doc.data());
-          setMovieName(doc.data().mname);
-          console.log("movie is ", moviename);
+          setscreentype(doc.data().screenType);
+          console.log("screen is ", screenType);
         });
       }
     );
@@ -122,19 +105,16 @@ const BookingList = () => {
 
   const classes = useStyles();
 
-  const deletebooking = async (bid) => {
-    const docSnap = await getDoc(doc(db, "movieBooking", bid));
+  const deleteSeat = async (seatid) => {
+    const docSnap = await getDoc(doc(db, "seat", seatid));
     if (docSnap.exists()) {
-      const booking = docSnap.data();
-      const bookingData = { ...booking };
-      console.log("booking seat id", bookingData.seatid);
-      //========================
-      updateDoc(doc(db, "seat", bookingData.seatid), {
-        status: "available",
-      });
+      const bs = docSnap.data();
+      const bsd = { ...bs };
+      console.log("seat id", bsd.seatid);
+      
 
-      deleteDoc(doc(db, "movieBooking", bid));
-      loadBookings();
+      deleteDoc(doc(db, "seat", seatid));
+      loadSeats();
       //=========================
     } else {
       console.log("No such document!");
@@ -143,46 +123,35 @@ const BookingList = () => {
 
   return (
     <Container style={{ height: "100vh", marginTop: 10 }} maxWidth="md">
+        <h1>Screen type - Theatre</h1>
+        <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => history.push("/addseat")}
+                  >
+                    Add  a Seat
+                  </Button><br/>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="center">BookingID</TableCell>
-              <TableCell align="center">Email</TableCell>
-              <TableCell align="center">Movie</TableCell>
               <TableCell align="center">Seat Number</TableCell>
-              <TableCell align="center">Edit</TableCell>
+              <TableCell align="center">availability</TableCell>
               <TableCell align="center">Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {rows.map((row) => (
               <TableRow hover key={row.name}>
-                <TableCell align="center">{row.bid}</TableCell>
-                <TableCell align="center">{row.email}</TableCell>
-                <TableCell align="center">{row.movie}</TableCell>
-                <TableCell align="center">{row.seatId}</TableCell>
-                <TableCell align="center">
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={() =>
-                      history.push({
-                        pathname: "/edit-booking",
-                        state: { row },
-                      })
-                    }
-                  >
-                    Edit
-                  </Button>
-                </TableCell>
+                <TableCell align="center">{row.seatid}</TableCell>
+                <TableCell align="center">{row.status}</TableCell>
                 <TableCell align="center">
                   <Button
                     variant="outlined"
                     color="secondary"
                     onClick={() => {
-                      deletebooking(row.bid);
-                      console.log(row.bid);
+                      deleteSeat(row.seatid);
+                      console.log(row.seatid);
                     }}
                   >
                     Delete
@@ -196,4 +165,4 @@ const BookingList = () => {
     </Container>
   );
 };
-export default BookingList;
+export default ScreenSeat;

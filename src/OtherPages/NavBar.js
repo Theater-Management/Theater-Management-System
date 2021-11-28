@@ -80,6 +80,12 @@ const NavBar = () => {
             >
               Sign Up
             </Button>
+            <Button
+              style={{ color: "white" }}
+              onClick={() => history.push("/")}
+            >
+              Sign Out
+            </Button>
           </div>
         </Toolbar>
       </AppBar>
