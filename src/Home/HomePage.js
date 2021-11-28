@@ -91,7 +91,7 @@ const HomePage = () => {
               history.push("/theater");
               break;
             case "screen":
-              history.push("/screenseatbooked");
+              history.push("/screens");
               break;
             case "admin":
               history.push("/admin-home");
