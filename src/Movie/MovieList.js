@@ -84,16 +84,11 @@ const columns = [
     align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
-  {
-    id: "action",
-    label: "Action",
-    minWidth: 250,
-    align: "center",
-  },
+
 ];
 
-function createData(mname, description, director, url, action) {
-  return { mname, description, director, url, action };
+function createData(mname, description, director, url) {
+  return { mname, description, director, url};
 }
 
 const MovieList = () => {
@@ -118,16 +113,6 @@ const MovieList = () => {
             doc.data().description,
             doc.data().director,
             doc.data().url,
-            <span>
-              <Tooltip title="Book" placement="top">
-                <a href="/view-bookings">
-                  <IconButton color="primary" aria-label="add to shopping cart">
-                    <AddShoppingCartIcon />
-                  </IconButton>
-                </a>
-              </Tooltip>{" "}
-              &nbsp;
-            </span>
           )
         );
       });
