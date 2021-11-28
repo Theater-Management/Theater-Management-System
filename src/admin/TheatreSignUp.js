@@ -80,106 +80,111 @@ const TheatreSignUp = () => {
         // ..
       });
 
-    //==============================
-    history.push("movie-list");
-    //------------------------------------------------------
   };
 
-  return (
-    <Container style={{ height: "100vh" }} maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Theatre Sign up
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                autoComplete="theatrename"
-                name="theatrename"
-                variant="outlined"
-                required
-                fullWidth
-                id="theatrename"
-                label="Threatre Name"
-                value={details.theatrename}
-                autoFocus
-                onChange={setValue}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="location"
-                label="Location"
-                name="location"
-                autoComplete="location"
-                value={details.location}
-                onChange={setValue}
-              />
-            </Grid>
+ 
 
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="capacity"
-                label="capacity"
-                name="capacity"
-                autoComplete="capacity"
-                value={details.capacity}
-                onChange={setValue}
-              />
-            </Grid>
+        //==============================
+        history.push("theatrehome");
+        //------------------------------------------------------
+    };
 
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                value={details.email}
-                autoComplete="email"
-                onChange={setValue}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                value={details.password}
-                autoComplete="current-password"
-                onChange={setValue}
-              />
-            </Grid>
-          </Grid>
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={handleSubmit}
-          >
-            Sign Up
-          </Button>
-          <Grid container justifyContent="flex-end"></Grid>
-        </form>
-      </div>
-    </Container>
-  );
+    return (
+        <Container style={{ height: "100vh" }} maxWidth="xs">
+            <CssBaseline />
+            <div className={classes.paper}>
+                <Avatar className={classes.avatar}>
+                    <LockOutlinedIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                   Theatre Sign up
+                </Typography>
+                <form className={classes.form} noValidate>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                autoComplete="theatrename"
+                                name="theatrename"
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="theatrename"
+                                label="Threatre Name"
+                                value={details.theatrename}
+                                autoFocus
+                                onChange={setValue}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="location"
+                                label="Location"
+                                name="location"
+                                autoComplete="location"
+                                value={details.location}
+                                onChange={setValue}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="capacity"
+                                label="capacity"
+                                name="capacity"
+                                autoComplete="capacity"
+                                value={details.capacity}
+                                onChange={setValue}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                value={details.email}
+                                autoComplete="email"
+                                onChange={setValue}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                value={details.password}
+                                autoComplete="current-password"
+                                onChange={setValue}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                        onClick={handleSubmit}
+                    >
+                        Sign Up
+                    </Button>
+                    <Grid container justifyContent="flex-end">
+                    </Grid>
+                </form>
+            </div>
+        </Container>
+    );
 };
 export default TheatreSignUp;
