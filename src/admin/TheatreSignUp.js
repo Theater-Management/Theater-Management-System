@@ -37,55 +37,55 @@ const useStyles = makeStyles((theme) => ({
 }));
 const TheatreSignUp = () => {
 
-    const history = useHistory();
-    const classes = useStyles();
+  const history = useHistory();
+  const classes = useStyles();
 
-    const [details, setDetails] = useState({
-        theatrename: "",
-        location: "",
-        capacity: "",
-        email: "",
-        password: "",
-        type: "",
-    });
+  const [details, setDetails] = useState({
+    theatrename: "",
+    location: "",
+    capacity: "",
+    email: "",
+    password: "",
+    type: "",
+    tid: "",
+  });
 
-    const setValue = (e) =>
-        setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
+  const setValue = (e) =>
+    setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
 
+  const handleSubmit = () => {
+    console.log(details);
 
-    const handleSubmit = () => {
-        console.log(details);
+    console.log(details);
+    //===============================
+    createUserWithEmailAndPassword(auth, details.email, details.password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+// =========================================
+        setDoc(doc(db, "users", user.uid), {
+          tname: details.theatrename,
+          location: details.location,
+          capacity: details.capacity,
+          email: details.email,
+          password: details.password,
+          type: "theatre",
+          tid: user.uid,
+        });
 
+        console.log("created");
+        history.push("/theatrehome");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
+  };
 
-        console.log(details);
-        //===============================
-        createUserWithEmailAndPassword(auth, details.email, details.password)
-            .then((userCredential) => {
-                // Signed in
-                const user = userCredential.user;
+  //==============================
 
-                setDoc(doc(db, "users", user.uid), {
-                    theatrename: details.theatrename,
-                    location: details.location,
-                    capacity: details.capacity,
-                    email: details.email,
-                    password: details.password,
-                    type: "theatre",
-
-                });
-
-                console.log("created");
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                // ..
-            });
-
-        //==============================
-        history.push("movie-list");
-        //------------------------------------------------------
-    };
+  //------------------------------------------------------
 
 
   return (
