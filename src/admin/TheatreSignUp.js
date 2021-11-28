@@ -185,10 +185,6 @@ const TheatreSignUp = () => {
     </Container>
   );
 };
-
-
- 
-=======
 export default TheatreSignUp;
 
 
