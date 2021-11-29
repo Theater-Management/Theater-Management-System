@@ -71,7 +71,7 @@ const AdminHome = () => {
     if (docSnap.exists()) {
       const udata = docSnap.data();
       const userData = { ...udata };
-      console.log("booking seat id", userData);
+      // console.log("booking seat id", userData);
       setDetails({ ...userData });
       console.log(details);
     } else {
