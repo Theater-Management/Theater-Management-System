@@ -3,6 +3,7 @@ import React, { createContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { auth, db } from "./firebase";
 
+
 export const AuthContext = createContext();
 
 export const AuthProvider = (props) => {

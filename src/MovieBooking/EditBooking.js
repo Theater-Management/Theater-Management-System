@@ -76,6 +76,7 @@ const EditBooking = () => {
   const [prevseatid, setPrevSeatId] = useState("");
 
   useEffect(async () => {
+    console.log("row data ", location.state.row);
     setSeats([]);
     const docRef = doc(db, "movieBooking", location.state.row.bid);
     const docSnap = await getDoc(docRef);
@@ -125,7 +126,7 @@ const EditBooking = () => {
       const screen = docSnap.data();
       const screenData = { ...screen };
       console.log("screen data ", screenData);
-      setScreenType(docSnap.data().screenType);
+      setScreenType(docSnap.data().screentype);
     } else {
       console.log("No such document!");
     }

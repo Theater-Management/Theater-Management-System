@@ -34,6 +34,9 @@ import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Tooltip from "@material-ui/core/Tooltip";
 import Chip from "@material-ui/core/Chip";
 import FaceIcon from "@material-ui/icons/Face";
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
 function createUserData(uid, email, gender) {
   return { uid, email, gender };
@@ -114,10 +117,12 @@ const UserList = () => {
   const [type, setType] = useState("viewer"); //user type
   const [active, setActive] = useState(false); //admin button active?
   const [array, setArray] = useState([]);
+  const history = useHistory();
 
   const deleteUser = async (uid) => {
     const userId = doc(db, "users", uid);
     await deleteDoc(userId);
+    setOpen(true);
     window.location.reload(false);
   };
 
@@ -131,7 +136,6 @@ const UserList = () => {
           const uname = doc.data().fname + " " + doc.data().lname;
           // const email = doc.data().email.toLowerCase(); ---- issue
           const email = doc.data().email;
-
 
           const toTitleCase = (phrase) => {
             return phrase
@@ -150,21 +154,34 @@ const UserList = () => {
               doc.data().gender,
               <span>
                 {!active ? (
-                  <Tooltip title="Delete" placement="right">
+                  <div>
+                    <Tooltip title="Delete Viewer" placement="right">
+                      <Chip
+                        label="Remove Viewer"
+                        onClick={() => {
+                          deleteUser(doc.id);
+                        }}
+                        variant="outlined"
+                        color="primary"
+                        icon={<DeleteForeverIcon />}
+                      />
+                    </Tooltip>
+                    <div>
+                      <div></div>
+                    </div>
+                  </div>
+                ) : (
+                  <Tooltip title="Delete Admin" placement="right">
                     <Chip
-                      label="Remove User"
+                      icon={<FaceIcon />}
+                      variant="outlined"
+                      color="secondary"
                       onClick={() => {
                         deleteUser(doc.id);
                       }}
-                      style={{
-                        color: "#00695c",
-                        backgroundColor: "#b2dfdb",
-                      }}
-                      icon={<DeleteForeverIcon />}
+                      label="Remove Admin"
                     />
                   </Tooltip>
-                ) : (
-                  <Chip icon={<FaceIcon />} label="User - Admin" />
                 )}
               </span>
             )
@@ -175,10 +192,10 @@ const UserList = () => {
     );
   }, [type]);
 
-  
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [open, setOpen] = React.useState(false);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -189,13 +206,25 @@ const UserList = () => {
     setPage(0);
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+    setTimeout(() => {
+      console.log("Hello, World!");
+    }, 2000);
+    history.push("user-list");
+  };
+
   return (
     <Container style={{ minHeight: "80vh" }} maxWidth="sm">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar
           className={classes.avatar}
-          style={{ backgroundColor: "#e65100" }}
+          style={{ backgroundColor: "#00acc1" }}
         >
           <PeopleIcon />
         </Avatar>
@@ -232,7 +261,7 @@ const UserList = () => {
                 console.log("viewer");
               }}
             >
-              Users
+              Viewer
             </Button>
           </ButtonGroup>
           <br />
@@ -248,8 +277,9 @@ const UserList = () => {
                         align={column.align}
                         style={{
                           minWidth: column.minWidth,
-                          backgroundColor: "#bf360c",
+                          backgroundColor: "#00acc1",
                           color: "white",
+                          fontSize:"15px"
                         }}
                       >
                         {column.label}
@@ -295,6 +325,28 @@ const UserList = () => {
             />
           </Paper>
         </div>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message={"User(Viewer) deleted!"}
+          action={
+            <React.Fragment>
+              <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleClose}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </React.Fragment>
+          }
+        />
       </div>
     </Container>
   );

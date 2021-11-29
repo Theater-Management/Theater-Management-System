@@ -26,6 +26,7 @@ import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import CreateIcon from "@material-ui/icons/Create";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { Button } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -152,6 +153,8 @@ const MovieList = () => {
         >
           View Movies
         </Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={4}>
         <Button
           variant="contained"
           color="primary"
@@ -162,16 +165,32 @@ const MovieList = () => {
         >
           View Bookings
         </Button>
+          </Grid>
+          <Grid item xs={12} sm={4}>
         <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              history.push("/edit-users");
+
+            }}
+        >
+          Edit profile
+        </Button>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+         <Button
           variant="contained"
           color="primary"
           onClick={() => {
             history.push("/addbooking");
-            
+
           }}
         >
           Add Bookings
         </Button>
+          </Grid>
+        </Grid>
         <div style={{ marginBottom: "40px" }}>
           <br />
           <br />
