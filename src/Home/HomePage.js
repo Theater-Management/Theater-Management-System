@@ -5,7 +5,12 @@ import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 //firebase
 import { auth, db } from "../firebase/firebase";
 import { doc, setDoc } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+} from "firebase/auth";
+
 import {
   getFirestore,
   collection,
@@ -140,6 +145,21 @@ const HomePage = () => {
 
   const classes = useStyles();
 
+  const handleForgetPassword = () => {
+    const auth = getAuth();
+    sendPasswordResetEmail(auth, details.email)
+      .then(() => {
+        // Password reset email sent!
+        console.log("email sent");
+        // ..
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
+  };
+
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -192,9 +212,9 @@ const HomePage = () => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Button color="primary" onClick={handleForgetPassword}>
                   Forgot password?
-                </Link>
+                </Button>
               </Grid>
               <Grid item>
                 <Button color="primary" onClick={() => history.push("/signup")}>
