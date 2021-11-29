@@ -1,34 +1,29 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useHistory } from "react-router";
-import { AuthContext } from "../firebase/AuthContext";
-//firebase
-import { auth, db } from "../firebase/firebase";
-import { doc, setDoc } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  updateDoc,
-  deleteDoc,
-  getDoc,
-} from "firebase/firestore";
-
+import { Button } from "@material-ui/core";
+import Container from "@material-ui/core/Container";
+import Paper from "@material-ui/core/Paper";
 //material Ui
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import Container from "@material-ui/core/Container";
-import { Button, Grid, Modal } from "@material-ui/core";
-
-import { Search } from "@material-ui/icons";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import React, { useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router";
+import { AuthContext } from "../firebase/AuthContext";
+//firebase
+import { db } from "../firebase/firebase";
 
 function createData(bid, email, movie, seatId) {
   return { bid, email, movie, seatId };
@@ -55,31 +50,58 @@ const BookingList = () => {
   const [rows, setRows] = useState([]);
   const [moviename, setMovieName] = useState("");
   const [array, setArray] = useState([]);
+
+  const [bookid, setBookid] = useState("");
+  const [emailadd, setemailadd] = useState("");
+  const [seatno, setseatno] = useState("");
   useEffect(() => {
-    setArray([]);
-    getDocs(
-      query(
-        collection(db, "movieBooking"),
-        where("uid", "==", user.user.userDetails.uid)
-      )
-    ).then((query) => {
-      query.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-        console.log("mid id ", doc.data().mid);
-        getMovieName(doc.data().mid);
-        array.push(
-          createData(
-            doc.data().bid,
-            doc.data().email,
-            moviename,
-            doc.data().seatid
-          )
-        );
+    if (user.user !== "INIT") {
+      console.log(user);
+      getDocs(
+        query(
+          collection(db, "movieBooking"),
+          where("uid", "==", user.user.userDetails.uid)
+        )
+      ).then(async (query) => {
+        // for (const file of files) {
+        //   const contents = await fs.readFile(file, "utf8");
+        //   console.log(contents);
+        // }
+
+        let arr = [];
+        for (const doc of query.docs) {
+          setBookid(doc.data().bid);
+          setseatno(doc.data().seatid);
+          setemailadd(doc.data().email);
+          arr.push(await getMovieName(doc.data()));
+        }
+        setArray(arr);
+        setRows(arr);
+        // query.forEach((doc) => {
+        //   console.log(doc.id, " => ", doc.data());
+        //   console.log("mid id ", doc.data().mid);
+        //   console.table(doc.data());
+        //   setBookid(doc.data().bid);
+        //   setseatno(doc.data().seatid);
+        //   setemailadd(doc.data().email);
+        //   console.log("seatno ", seatno);
+        //   getMovieName(doc.data());
+
+        //   // array.push(
+        //   //   createData(
+        //   //     doc.data().bid,
+        //   //     doc.data().email,
+        //   //     moviename,
+        //   //     doc.data().seatid
+        //   //   )
+        //   // );
+        //   // setRows(array);
+        // });
+        // setRows(array);
+        console.log(array);
       });
-      setRows(array);
-      console.log(array);
-    });
-  }, [moviename]);
+    }
+  }, [user]);
 
   const loadBookings = () => {
     setArray([]);
@@ -106,17 +128,37 @@ const BookingList = () => {
     });
   };
   //==========================================================
-  const getMovieName = (mid) => {
-    getDocs(query(collection(db, "Movie"), where("mid", "==", mid))).then(
-      (query) => {
-        query.forEach((doc) => {
-          console.log(doc.id, " => ", doc.data());
-          setMovieName(doc.data().mname);
-          console.log("movie is ", moviename);
-        });
-      }
-    );
+  const getMovieName = async ({
+    mid,
+    bid: bookid,
+    email: emailadd,
+    seatid: seatno,
+  }) => {
+    //  getDocs(query(collection(db, "Movie"), where("mid", "==", mid))).then(
+    //     (query) => {
+    //       query.forEach((doc) => {
+    //         console.log(doc.id, " => ", doc.data());
+    //         setMovieName(doc.data().mname);
+    //         console.log("movie is ", moviename);
+    //         array.push(createData(bookid, emailadd, moviename, seatno));
+    //         setRows(array);
+    //         console.log("array in func ", array);
+    //       });
+    //     }
+    //   );
+
+    const docSnap = await getDoc(doc(db, "Movie", mid));
+    if (docSnap.exists()) {
+      console.log(" => ", docSnap.data());
+      setMovieName(docSnap.data().mname);
+      console.log("movie is ", moviename);
+      return createData(bookid, emailadd, docSnap.data().mname, seatno);
+    } else {
+      console.log("No such document!");
+    }
   };
+
+  useEffect(() => console.log(array), [array]);
 
   //========================================================
 
@@ -134,7 +176,8 @@ const BookingList = () => {
       });
 
       deleteDoc(doc(db, "movieBooking", bid));
-      loadBookings();
+      // loadBookings();
+      //window.location.reload();
       //=========================
     } else {
       console.log("No such document!");
