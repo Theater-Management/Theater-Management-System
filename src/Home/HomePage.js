@@ -93,7 +93,7 @@ const HomePage = () => {
               history.push("/theatrehome");
               break;
             case "screen":
-              history.push("/screens");
+              history.push("/screenhome");
               break;
             case "admin":
               history.push("/admin-home");

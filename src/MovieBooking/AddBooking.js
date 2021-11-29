@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import {
   doc,
@@ -7,8 +7,11 @@ import {
   query,
   where,
   getDocs,
+  getDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { auth, db } from "../firebase/firebase";
+import { AuthContext } from "../firebase/AuthContext";
 
 //  material ui
 import Avatar from "@material-ui/core/Avatar";
@@ -54,64 +57,78 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-function createMovieData(mid,mname){
-  return { mid,mname };
+function createMovieData(mid, mname, tid, sid) {
+  return { mid, mname, tid, sid };
 }
-function createSeleMovieData(mid,tid,sid){
-  return { mid,tid,sid };
+function createData(seatid, status) {
+  return { seatid, status };
 }
 
 const AddBooking = () => {
   const history = useHistory();
   const classes = useStyles();
+  const [rows, setRows] = useState([]);
+  const [array, setArray] = useState([]);
+  const user = useContext(AuthContext);
+  console.log(user.user.userDetails);
 
   const [movies, setMovies] = useState([]);
   const [mrows, setMRows] = useState([]);
 
-  const [selemovies, setSeleMovies] = useState([]);
-  const [smrows, setSMRows] = useState([]);
-
   const [details, setDetails] = useState({
+    bid: "",
     mid: "",
-    email:"",
-    sid:"",
-    tid:"",
-    seatid:"",
+    email: user.user.userDetails.email,
+    sid: "",
+    tid: "",
+    seatid: "",
+    uid: user.user.userDetails.uid,
   });
 
-  useEffect(async () => {
-    
-    setMovies([]);
-    getDocs(
-      query(collection(db, "Movies"))
-    ).then((query) => {
-      query.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-        movies.push(createMovieData(doc.data().mid,doc.data().mname));
+  useEffect(
+    async () => {
+      setMovies([]);
+      getDocs(query(collection(db, "Movie"))).then((query) => {
+        query.forEach((doc) => {
+          console.log(doc.id, " => ", doc.data());
+          movies.push(
+            createMovieData(
+              doc.data().mid,
+              doc.data().mname,
+              doc.data().tid,
+              doc.data().sid
+            )
+          );
+        });
+        setMRows(movies);
+        console.log(movies);
       });
-      setMRows(movies);
-   
-    });
+    },
+    [details],
+    console.log(details)
+  );
 
-    setSeleMovies([]);
+  const loadSeats = () => {
+    setArray([]);
     getDocs(
-      query(collection(db, "Movies")),
-      where("mid", "==", details.mid)
+      query(collection(db, "seat"), where("sid", "==", details.sid))
     ).then((query) => {
       query.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-        selemovies.push(createSeleMovieData(doc.data().tid, doc.data().sid,doc.data().mid));
+        if (doc.data().status == "available") {
+          console.log(doc.id, " => ", doc.data());
+          //console.log(doc.id, " => ", doc.data());
+          array.push(createData(doc.data().seatid, doc.data().status));
+        }
       });
-      setMRows(selemovies);
-   
+      setRows(array);
+      console.log("seats", array);
     });
-  
-  }, [details]);
+  };
+
+  //=====================================
 
   const setValue = (e) =>
     setDetails((details) => ({ ...details, [e.target.name]: e.target.value }));
-  
 
   const [open, setOpen] = React.useState(false);
 
@@ -122,15 +139,20 @@ const AddBooking = () => {
 
     setDoc(bookingdocRef, {
       bid: bookingdocRef.id,
-      mid:details.mid,
-      sid:details.sid,
-      tid:details.tid,
-      email:details.email,
-      // uid:
+      mid: details.mid,
+      sid: details.sid,
+      tid: details.tid,
+      email: user.user.userDetails.email,
+      uid: user.user.userDetails.uid,
+      seatid: details.seatid,
     });
 
     setOpen(true);
     console.log("created: " + details);
+
+    updateDoc(doc(db, "seat", details.seatid), {
+      status: "booked",
+    });
   };
 
   const handleClose = (event, reason) => {
@@ -157,8 +179,7 @@ const AddBooking = () => {
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-          
-          <Grid item xs={12}>
+            <Grid item xs={12}>
               <TextField
                 variant="outlined"
                 required
@@ -167,11 +188,12 @@ const AddBooking = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                value={details.email}
+                value={user.user.userDetails.email}
                 onChange={setValue}
+                readOnly
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel htmlFor="outlined-age-native-simple">
                   Movie
@@ -186,17 +208,46 @@ const AddBooking = () => {
                   onChange={setValue}
                 >
                   {mrows.map((movie) => (
-                    <option key={movie.mid} value={movie.mid}>
+                    <option
+                      key={movie.mid}
+                      value={movie.mid}
+                      onClick={() => {
+                        details.sid = movie.sid;
+                        details.tid = movie.tid;
+                        loadSeats();
+                        console.log("testing code ", details);
+                      }}
+                    >
                       {movie.mname}
                     </option>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
-            
-
-
           </Grid>
+          <Grid item xs={12}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel htmlFor="outlined-age-native-simple">
+                Select a Seat
+              </InputLabel>
+              <Select
+                id="standard-select-movie-native"
+                select
+                fullWidth
+                name="seatid"
+                label="Select a Seat"
+                value={details.seatid}
+                onChange={setValue}
+              >
+                {rows.map((seat) => (
+                  <option key={seat.seatid} value={seat.seatid}>
+                    {seat.seatid}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <Button

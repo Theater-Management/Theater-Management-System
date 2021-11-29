@@ -64,7 +64,7 @@ const columns = [
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "dascription",
+    id: "description",
     label: "Description",
     minWidth: 300,
     align: "left",
@@ -170,7 +170,7 @@ const MovieList = () => {
             
           }}
         >
-          View Bookings
+          Add Bookings
         </Button>
         <div style={{ marginBottom: "40px" }}>
           <br />

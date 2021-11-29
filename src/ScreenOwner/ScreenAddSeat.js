@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext,useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { AuthContext } from "../firebase/AuthContext";
 
 //firebase
 import { auth, db } from "../firebase/firebase";
@@ -44,7 +45,8 @@ const useStyles = makeStyles((theme) => ({
 const ScreenAddSeat = () => {
     const history = useHistory();
     const classes = useStyles();
-  
+    const user = useContext(AuthContext);
+    console.log(user.user.userDetails);
     const [details, setDetails] = useState({
       sid: "",
       seatid: "",
@@ -57,7 +59,7 @@ const ScreenAddSeat = () => {
   
     const handleSubmit = () => {
       console.log(details);
-       const sesid="XwnGcL4e1gqWAIxnyNm5";
+       const sesid=user.user.userDetails.uid;
 
       setDoc(doc(db, "seat",details.seatid), {
         sid: sesid,
@@ -70,7 +72,7 @@ const ScreenAddSeat = () => {
         
 };
 return (
-    <Container style={{ height: "100vh" }} >
+    <Container style={{ height: "100vh" }} maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -80,14 +82,14 @@ return (
           Add Seat
         </Typography>
         <form className={classes.form} noValidate>
-          <Grid container >
+          <Grid container alignItems="center" spacing={2} >
             <Grid item xs={12}>
               <TextField
                 autoComplete="seatid"
                 name="seatid"
                 variant="outlined"
                 required
-                
+              
                 id="seatid"
                 label="Enter a Seat Number"
                 value={details.seatid}

@@ -52,6 +52,7 @@ const ScreenSeat = () => {
   const history = useHistory();
   const user = useContext(AuthContext);
   console.log(user.user.userDetails);
+
   const [rows, setRows] = useState([]);
   const [screenType, setscreentype] = useState("");
   const [array, setArray] = useState([]);
@@ -60,7 +61,7 @@ const ScreenSeat = () => {
     getDocs(
       query(
         collection(db, "seat"),
-        where("sid", "==",  user.user.userDetails.uid)
+        where("sid", "==", user.user.userDetails.sid)
         
       )
     ).then((query) => {
@@ -83,7 +84,7 @@ const ScreenSeat = () => {
     getDocs(
       query(
         collection(db, "seat"),
-        where("sid", "==",user.user.userDetails.uid)
+        where("sid", "==",user.user.userDetails.sid)
       )
     ).then((query) => {
       query.forEach((doc) => {
@@ -118,7 +119,7 @@ const ScreenSeat = () => {
 
   return (
     <Container style={{ height: "100vh", marginTop: 10 }} maxWidth="md">
-        <h1>Screen type - Theatre</h1>
+      
         <Button
                     variant="outlined"
                     color="primary"
@@ -142,7 +143,7 @@ const ScreenSeat = () => {
                 <TableCell align="center">{row.status}</TableCell>
                 <TableCell align="center">
 
-                  // Delete seat button
+                 
                   <Button
                       variant="outlined"
                       color="secondary"
