@@ -63,11 +63,6 @@ const BookingList = () => {
           where("uid", "==", user.user.userDetails.uid)
         )
       ).then(async (query) => {
-        // for (const file of files) {
-        //   const contents = await fs.readFile(file, "utf8");
-        //   console.log(contents);
-        // }
-
         let arr = [];
         for (const doc of query.docs) {
           setBookid(doc.data().bid);
@@ -77,27 +72,7 @@ const BookingList = () => {
         }
         setArray(arr);
         setRows(arr);
-        // query.forEach((doc) => {
-        //   console.log(doc.id, " => ", doc.data());
-        //   console.log("mid id ", doc.data().mid);
-        //   console.table(doc.data());
-        //   setBookid(doc.data().bid);
-        //   setseatno(doc.data().seatid);
-        //   setemailadd(doc.data().email);
-        //   console.log("seatno ", seatno);
-        //   getMovieName(doc.data());
 
-        //   // array.push(
-        //   //   createData(
-        //   //     doc.data().bid,
-        //   //     doc.data().email,
-        //   //     moviename,
-        //   //     doc.data().seatid
-        //   //   )
-        //   // );
-        //   // setRows(array);
-        // });
-        // setRows(array);
         console.log(array);
       });
     }
@@ -134,19 +109,6 @@ const BookingList = () => {
     email: emailadd,
     seatid: seatno,
   }) => {
-    //  getDocs(query(collection(db, "Movie"), where("mid", "==", mid))).then(
-    //     (query) => {
-    //       query.forEach((doc) => {
-    //         console.log(doc.id, " => ", doc.data());
-    //         setMovieName(doc.data().mname);
-    //         console.log("movie is ", moviename);
-    //         array.push(createData(bookid, emailadd, moviename, seatno));
-    //         setRows(array);
-    //         console.log("array in func ", array);
-    //       });
-    //     }
-    //   );
-
     const docSnap = await getDoc(doc(db, "Movie", mid));
     if (docSnap.exists()) {
       console.log(" => ", docSnap.data());
