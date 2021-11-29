@@ -167,6 +167,10 @@ const AdminHome = () => {
           aria-label="vertical contained primary button group"
           variant="contained"
         >
+          <Button onClick={() => history.push("/adminsignup")}>
+            New Admin Signup
+          </Button>
+
           <Button onClick={() => history.push("/edit-admin")}>
             Edit Profile
           </Button>
