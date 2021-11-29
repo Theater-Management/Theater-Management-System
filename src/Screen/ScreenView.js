@@ -83,11 +83,11 @@ const ScreenView = () => {
         query.forEach((doc) => {
           console.log(doc.id, " => ", doc.data());
           array.push(
-            createData(doc.data().uid, doc.data().email, doc.data().screentype)
+            createData(doc.data().sid, doc.data().email, doc.data().screentype)
           );
         });
         setRows(array);
-        console.log(array);
+        console.log("array", array);
       }
     );
   }, []);
