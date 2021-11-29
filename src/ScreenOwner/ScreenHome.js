@@ -139,21 +139,6 @@ const ScreenHome = () => {
                   autoComplete="screentype"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="theatre"
-                  label="theatre"
-                  type="theatre"
-                  id="theatre"
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  value={details.theatre}
-                  autoComplete="current-theatre"
-                />
-              </Grid>
             </Grid>
           </form>
         </div>
@@ -165,10 +150,10 @@ const ScreenHome = () => {
           aria-label="vertical contained primary button group"
           variant="contained"
         >
-          <Button onClick={() => history.push("/screenseat")}>
+          <Button onClick={() => history.push("/screenseatbooked")}>
             Booked Seats
           </Button>
-          <Button onClick={() => history.push("/screenseatbooked")}>
+          <Button onClick={() => history.push("/screenseat")}>
             Available Seats
           </Button>
         </ButtonGroup>

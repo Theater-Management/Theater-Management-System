@@ -103,7 +103,7 @@ const ScreenSeat = () => {
 
   return (
     <Container style={{ height: "100vh", marginTop: 10 }} maxWidth="md">
-        <h1>Screen type - Theatree</h1>
+      
         <Button
                     variant="outlined"
                     color="primary"
