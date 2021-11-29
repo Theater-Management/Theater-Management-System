@@ -177,6 +177,7 @@ const BookingList = () => {
 
       deleteDoc(doc(db, "movieBooking", bid));
       // loadBookings();
+      //window.location.reload();
       //=========================
     } else {
       console.log("No such document!");
