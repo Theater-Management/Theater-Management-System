@@ -228,6 +228,7 @@ const TheaterProfile = () => {
             </CardContent>
             <CardActions></CardActions>
           </Card>
+          <Button onClick={()=> history.push('./edit-theatre')} variant="contained" color="primary" style={{ marginTop:'20px'}}>Edit Profile</Button>
         </div>
       </div>
     </Container>
