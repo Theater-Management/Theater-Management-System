@@ -187,6 +187,8 @@ const AdminHome = () => {
           <Button onClick={() => history.push("/screensignup")}>
             Screen Sign Up
           </Button>
+          <Button onClick={() => history.push("/user-list")}>Users</Button>
+          <Button onClick={() => history.push("/add-movie")}>Add Movie</Button>
         </ButtonGroup>
       </Grid>
     </Grid>

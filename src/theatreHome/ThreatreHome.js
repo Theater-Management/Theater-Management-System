@@ -1,4 +1,4 @@
-import React, { useContext,useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { AuthContext } from "../firebase/AuthContext";
 //firebase
@@ -12,6 +12,7 @@ import {
   where,
   getDocs,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 
 //material Ui
@@ -78,16 +79,21 @@ const ThreatreHome = () => {
   const user = useContext(AuthContext);
   console.log(user.user.userDetails);
   const [array, setArray] = useState([]);
+
   useEffect(() => {
     setArray([]);
     getDocs(query(collection(db, "users"), where("type", "==", "screen"))).then(
       (query) => {
         query.forEach((doc) => {
-          if (doc.data().tid == user.user.userDetails.uid) {
-          console.log(doc.id, " => ", doc.data());
-          array.push(
-            createData(doc.data().uid, doc.data().email, doc.data().screentype)
-          );
+          if (doc.data().tid == user.user.userDetails.tid) {
+            console.log(doc.id, " => ", doc.data());
+            array.push(
+              createData(
+                doc.data().sid,
+                doc.data().email,
+                doc.data().screentype
+              )
+            );
           }
         });
         setRows(array);
@@ -155,8 +161,7 @@ const ThreatreHome = () => {
             <TableRow>
               <TableCell align="center">MovieId</TableCell>
               <TableCell align="center">Name</TableCell>
-              <TableCell align="center">TheaterId</TableCell>
-              <TableCell align="center">Remove from Screen</TableCell>
+              <TableCell align="center">Delete from Screen</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -164,13 +169,13 @@ const ThreatreHome = () => {
               <TableRow hover key={row.name}>
                 <TableCell align="center">{row.mid}</TableCell>
                 <TableCell align="center">{row.mname}</TableCell>
-                <TableCell align="center">{row.tid}</TableCell>
+
                 <TableCell align="center">
                   <Button
                     variant="outlined"
                     color="secondary"
                     onClick={() => {
-                      updateDoc(doc(db, "Movie", row.mid), {
+                      deleteDoc(doc(db, "Movie", row.mid), {
                         sid: "",
                       });
                       handleClose();
@@ -191,6 +196,20 @@ const ThreatreHome = () => {
   //----------------------------------------------------------------------------
   return (
     <Container style={{ height: "100vh", marginTop: 10 }} maxWidth="md">
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={() => history.push("/edit-theatre")}
+      >
+        Edit Theatre
+      </Button>
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={() => history.push("/add-movie")}
+      >
+        Add Movie
+      </Button>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
@@ -198,7 +217,8 @@ const ThreatreHome = () => {
               <TableCell align="center">ScreenID</TableCell>
               <TableCell align="center">Email</TableCell>
               <TableCell align="center">Type</TableCell>
-              <TableCell align="center">Movie List</TableCell>
+              <TableCell align="center"> MOVIES</TableCell>
+              <TableCell align="center">REMOVE SCREEN MOVIE</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -216,7 +236,19 @@ const ThreatreHome = () => {
                       setSelect(row.screenId);
                     }}
                   >
-                    Movies
+                    VIEW MOVIES
+                  </Button>
+                </TableCell>
+                <TableCell align="center">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => {
+                      loadMovieList(row.screenId);
+                      setSelect(row.screenId);
+                    }}
+                  >
+                    DELETE MOVIE
                   </Button>
                 </TableCell>
               </TableRow>
@@ -224,6 +256,7 @@ const ThreatreHome = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
       <Modal
         open={open}
         onClose={handleClose}
