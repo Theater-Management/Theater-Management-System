@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { getAuth, signOut } from "firebase/auth";
+
 //material Ui
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -37,6 +39,18 @@ const NavBar = () => {
   const classes = useStyles();
   const preventDefault = (event) => event.preventDefault();
   const history = useHistory();
+
+  const handlesignOut = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+        history.push("/");
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  };
   return (
     <div className={classes.grow}>
       <AppBar position="static">
@@ -56,23 +70,18 @@ const NavBar = () => {
           <div className={classes.grow} />
 
           <div className={classes.root}>
-          <Button
-              style={{ color: "white" }}
-              onClick={() => history.push("/edit-theatre")}
-            >Edit Theatre</Button>
-            <Button style={{ color: "white" }}  onClick={() => history.push("/movie-list")}>Movie List</Button>
             <Button
-           
               style={{ color: "white" }}
-              onClick={() => history.push("/add-movie")}
+              onClick={() => history.push("/movie-list")}
             >
-              Add Movie
+              Movie List
             </Button>
+
             <Button
               style={{ color: "white" }}
-              onClick={() => history.push("/user-list")}
+              onClick={() => history.push("/")}
             >
-              Users
+              Home
             </Button>
             <Button
               style={{ color: "white" }}
@@ -82,7 +91,9 @@ const NavBar = () => {
             </Button>
             <Button
               style={{ color: "white" }}
-              onClick={() => history.push("/")}
+              onClick={() => {
+                handlesignOut();
+              }}
             >
               Sign Out
             </Button>
